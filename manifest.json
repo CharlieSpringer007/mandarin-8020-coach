@@ -1,0 +1,14 @@
+{
+  "name": "Mandarin 80/20 Coach",
+  "short_name": "Mandarin 80/20",
+  "description": "A free course for speaking, reading and writing Mandarin Chinese, built on the 1,000 words you will actually use.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F3F6F4",
+  "theme_color": "#17705A",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

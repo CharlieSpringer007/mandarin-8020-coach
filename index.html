@@ -1,0 +1,1316 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mandarin 80/20 Coach</title>
+<meta name="description" content="A free course for speaking, reading and writing Mandarin Chinese, built on the 1,000 words you will actually use.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#17705A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Serif+SC:wght@400;600;700&family=Noto+Serif+TC:wght@400;600;700&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/pinyin-pro@3.26.0/dist/index.js"></script>
+<style>
+/* Layout: one reading column; a scrollable tab strip on top; the course is a vertical list of six modules; lessons are five numbered steps with characters in 田字格 practice squares */
+:root{
+  --paper:#F3F6F4; --sheet:#FFFFFF; --ink:#16211D; --muted:#5B6964; --line:#D3DDD8;
+  --jade:#17705A; --jade-soft:#E2F0EA; --seal:#B5332B; --seal-soft:#F7E3E0; --grid:#E7B8B3;
+  --t1:#D1352B; --t2:#23803A; --t3:#2C5FC4; --t4:#8B3DB4; --t5:#7B827F;
+  --ok:#23803A; --warn:#A76A08; --bad:#B5332B; --info:#2C5FC4; --violet:#7B3DB0;
+  --f-hanzi:"Noto Serif SC","Noto Serif TC","Songti SC","STSong","Microsoft YaHei",serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0F1513; --sheet:#17201D; --ink:#E6EEEA; --muted:#97A6A0; --line:#2C3934;
+  --jade:#4CC39F; --jade-soft:#173329; --seal:#F07A6F; --seal-soft:#3A1E1B; --grid:#5A2F2B;
+  --t1:#FF7A6E; --t2:#5BD07A; --t3:#7FA6FF; --t4:#D08BF5; --t5:#9AA3A0;
+  --ok:#5BD07A; --warn:#E7B04A; --bad:#F07A6F; --info:#7FA6FF; --violet:#C99BF0; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0F1513; --sheet:#17201D; --ink:#E6EEEA; --muted:#97A6A0; --line:#2C3934;
+  --jade:#4CC39F; --jade-soft:#173329; --seal:#F07A6F; --seal-soft:#3A1E1B; --grid:#5A2F2B;
+  --t1:#FF7A6E; --t2:#5BD07A; --t3:#7FA6FF; --t4:#D08BF5; --t5:#9AA3A0;
+  --ok:#5BD07A; --warn:#E7B04A; --bad:#F07A6F; --info:#7FA6FF; --violet:#C99BF0; color-scheme:dark}
+*{box-sizing:border-box}
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html,body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+body{background:var(--paper);color:var(--ink);font:15px/1.6 var(--f-body);-webkit-text-size-adjust:100%;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 64px}
+.wrap{max-width:960px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+h1,h2,h3,h4{text-wrap:balance;margin:0;line-height:1.25}
+p{margin:0}
+.hz{font-family:var(--f-hanzi)}
+.trad .hz{font-family:"Noto Serif TC","Noto Serif SC","Microsoft JhengHei",serif}
+.mono{font-family:var(--f-mono)}
+.label{font:500 11px/1.4 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+a{color:var(--jade)}
+button,select,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--jade);outline-offset:2px}
+
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.seal{width:46px;height:46px;border-radius:6px;background:var(--seal);color:var(--sheet);display:grid;place-items:center;font:700 22px/1 var(--f-hanzi);flex:none;letter-spacing:-.04em}
+.brand h1{font:600 22px/1.2 var(--f-hanzi)}
+.brand p{font-size:13px;color:var(--muted)}
+.meter{min-width:200px;flex:1;max-width:320px;display:flex;flex-direction:column;gap:6px}
+.meter .row{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.meter b{font:600 20px/1 var(--f-mono);font-variant-numeric:tabular-nums}
+.track{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.track i{display:block;height:100%;background:var(--jade);width:0;transition:width .4s}
+nav.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none;margin-inline:-4px}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{background:none;border:0;padding:10px 12px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;font-weight:500}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-color:var(--seal)}
+.status{font-size:13px;color:var(--muted);min-height:1em}
+
+.panel{background:var(--sheet);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:var(--sheet);border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:500;text-decoration:none;color:var(--ink);min-height:38px}
+.btn:hover{border-color:var(--jade)}
+.btn.primary{background:var(--jade);border-color:var(--jade);color:var(--sheet)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.red{background:var(--seal);border-color:var(--seal);color:var(--sheet)}
+.btn.small{padding:4px 10px;font-size:13px;min-height:32px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.field{display:flex;flex-direction:column;gap:6px}
+.field input,.field select,.field textarea,textarea.ans{border:1px solid var(--line);background:var(--paper);border-radius:8px;padding:9px 11px;width:100%}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg label{border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:14px}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label:has(input:checked){background:var(--jade-soft);border-color:var(--jade);color:var(--ink)}
+.seg label:has(input:focus-visible){outline:2px solid var(--jade)}
+.notice{border-left:3px solid var(--seal);padding:4px 0 4px 12px;font-size:14px}
+.err{color:var(--bad);font-size:14px}
+.back{background:none;border:0;color:var(--jade);cursor:pointer;padding:0;font-weight:500;align-self:flex-start}
+
+/* course */
+.course-head{display:flex;flex-direction:column;gap:10px}
+.course-head h2{font:600 24px/1.25 var(--f-hanzi)}
+.next{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--jade-soft);border:1px solid var(--jade);border-radius:var(--r);padding:12px 16px;cursor:pointer;text-align:left;color:var(--ink);width:100%}
+.next b{display:block;font-size:16px}
+.mods{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:10px}
+.modcard{display:flex;align-items:center;gap:12px;background:var(--sheet);border:1px solid var(--line);border-radius:var(--r);padding:12px;cursor:pointer;text-align:left;color:var(--ink);width:100%}
+.modcard:hover{border-color:var(--jade)}
+.modnum{width:36px;height:36px;border-radius:50%;background:var(--jade-soft);color:var(--jade);display:grid;place-items:center;font:600 18px/1 var(--f-mono);flex:none}
+.modcard .t{font-weight:600}
+.modcard .s{font-size:12px;color:var(--muted);line-height:1.35}
+.modcard .c{margin-left:auto;font:500 12px/1 var(--f-mono);color:var(--muted);flex:none}
+.modcard .c.done{color:var(--ok)}
+.module{display:flex;flex-direction:column;gap:10px;scroll-margin-top:12px}
+.module-h{display:flex;align-items:baseline;gap:12px;justify-content:space-between}
+.module-h h3{font:600 20px/1.3 var(--f-hanzi)}
+.classlist{background:var(--sheet);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.classrow{display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:11px 14px;border:0;border-top:1px solid var(--line);background:none;width:100%;text-align:left;cursor:pointer;color:var(--ink)}
+.classrow:first-child{border-top:0}
+.classrow:hover{background:var(--paper)}
+.tick{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--muted)}
+.tick.done{background:var(--ok);border-color:var(--ok);position:relative}
+.tick.done::after{content:"";position:absolute;left:6px;top:2px;width:5px;height:10px;border:solid var(--sheet);border-width:0 2px 2px 0;transform:rotate(45deg)}
+.classrow .ct{font-weight:500}
+.classrow .cs{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.classrow .meta{display:flex;gap:8px;align-items:center;font:500 12px/1 var(--f-mono);color:var(--muted)}
+@media (max-width:520px){.classrow .meta .kb{display:none}}
+.kb{font:500 10px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:4px;border:1px solid currentColor}
+.k-guide{color:var(--info)}.k-drill{color:var(--warn)}.k-aiLesson{color:var(--violet)}.k-setup{color:var(--muted)}.k-speaking{color:var(--seal)}
+.cls h2{font:600 26px/1.25 var(--f-hanzi)}
+.cls .lead{font-size:17px}
+ol.points{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:8px}
+.phrase{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:10px}
+.phrase:first-of-type{border-top:0;padding-top:0}
+.phrase .h{font:22px/1.4 var(--f-hanzi)}
+.task{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.task input{width:18px;height:18px;margin-top:3px;accent-color:var(--jade);flex:none}
+.task.done span{text-decoration:line-through;color:var(--muted)}
+.ai-box{background:var(--jade-soft);border:1px solid var(--jade)}
+
+/* goals */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr));gap:10px}
+.stat{background:var(--sheet);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+.stat b{display:block;font:600 30px/1.1 var(--f-mono);font-variant-numeric:tabular-nums}
+.bars{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:end;height:150px}
+.bar{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%;font:11px/1 var(--f-mono);color:var(--muted)}
+.bar i{display:block;width:100%;max-width:38px;border-radius:4px 4px 0 0;background:var(--jade);opacity:.45}
+.bar i.met{opacity:1}
+.kv{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 16px;font-size:14px}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0}
+
+/* lesson */
+.lesson{display:flex;flex-direction:column;gap:28px}
+.lesson-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:10px}
+.lesson-head h2{font:600 26px/1.2 var(--f-hanzi)}
+.step{display:flex;flex-direction:column;gap:14px}
+.step-h{display:flex;align-items:baseline;gap:12px;border-top:1px solid var(--line);padding-top:14px}
+.step-h .n{font:500 12px/1 var(--f-mono);color:var(--seal);letter-spacing:.08em}
+.step-h h3{font:600 18px/1.3 var(--f-body)}
+.sample-tag{background:var(--seal-soft);color:var(--seal);font:500 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;padding:5px 8px;border-radius:4px}
+.words{display:grid;gap:16px}
+.word{background:var(--sheet);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px 22px}
+@media (max-width:640px){.word{grid-template-columns:minmax(0,1fr)}}
+.tiles{display:flex;gap:6px;align-items:flex-start;flex-wrap:wrap}
+.tile{display:flex;flex-direction:column;align-items:center;gap:4px}
+.sq{width:80px;height:80px;border:1.5px solid var(--grid);display:grid;place-items:center;
+  background:
+   linear-gradient(to right,transparent calc(50% - .5px),var(--grid) calc(50% - .5px),var(--grid) calc(50% + .5px),transparent calc(50% + .5px)),
+   linear-gradient(to bottom,transparent calc(50% - .5px),var(--grid) calc(50% - .5px),var(--grid) calc(50% + .5px),transparent calc(50% + .5px));
+  font:600 54px/1 var(--f-hanzi)}
+.tile .py{font:500 13px/1 var(--f-mono)}
+.t1{color:var(--t1)}.t2{color:var(--t2)}.t3{color:var(--t3)}.t4{color:var(--t4)}.t5{color:var(--t5)}
+.word-main{display:flex;flex-direction:column;gap:10px;min-width:0}
+.word-main .gloss{font-size:18px;font-weight:600}
+.word-main .pyw{font:500 15px/1.3 var(--f-mono)}
+.literal{background:var(--paper);border-radius:8px;padding:10px 12px;font-size:14px}
+.chars{display:grid;gap:10px;grid-column:1/-1}
+.ch{display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;font-size:14px}
+.ch .big{font:600 32px/1 var(--f-hanzi)}
+.ch dl{margin:0;display:grid;grid-template-columns:max-content minmax(0,1fr);gap:2px 10px}
+.ch dt{color:var(--muted);font:500 11px/1.9 var(--f-mono);text-transform:uppercase;letter-spacing:.06em}
+.ch dd{margin:0}
+.family{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:14px;display:inline-flex;gap:6px;align-items:baseline;flex-wrap:wrap}
+.chip .hz{font-size:17px}
+.personal{background:var(--jade-soft);color:var(--jade);font:500 11px/1 var(--f-mono);padding:4px 7px;border-radius:4px;letter-spacing:.06em;text-transform:uppercase}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px}
+.anki{background:var(--sheet);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.anki .front{padding:18px;text-align:center;font:600 40px/1 var(--f-hanzi);border-bottom:1px dashed var(--line)}
+.anki .back{padding:14px 16px;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.anki .back .s{font-family:var(--f-hanzi);font-size:17px}
+.coach{background:var(--jade-soft);border-radius:8px;padding:10px 12px;font-size:14px}
+.reader{background:var(--sheet);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px}
+.story{font:400 23px/1.9 var(--f-hanzi);letter-spacing:.04em}
+.story mark{background:none;color:inherit;border-bottom:2px solid var(--seal);padding-bottom:1px}
+.story.segmented{word-spacing:.35em}
+.line-py{font:15px/1.7 var(--f-mono);color:var(--muted)}
+.shadow{font:20px/1.9 var(--f-hanzi)}
+.shadow .p{color:var(--seal);font-weight:700;padding:0 .15em}
+.toggles{display:flex;flex-wrap:wrap;gap:8px}
+.tog{border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:13px;background:none;cursor:pointer}
+.tog[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.clinic h4{font:600 17px/1.35 var(--f-body)}
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:10px;font-size:14px}
+.pair > div{border-radius:8px;padding:10px 12px}
+.pair .w{background:var(--seal-soft)}
+.pair .r{background:var(--jade-soft)}
+.pair .hz{font-size:18px;display:block}
+.pair .why{grid-column:1/-1;padding:0 2px;color:var(--muted)}
+.chal{display:flex;flex-direction:column;gap:18px}
+.chal-word{background:var(--sheet);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:10px}
+.chal-word h4{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;font-weight:600}
+.chal-word h4 .hz{font-size:24px}
+.slot{display:grid;grid-template-columns:140px minmax(0,1fr);gap:10px;align-items:start}
+@media (max-width:560px){.slot{grid-template-columns:minmax(0,1fr);gap:4px}}
+.slot label{font-size:13px;color:var(--muted);padding-top:9px}
+@media (max-width:560px){.slot label{padding-top:0}}
+textarea.ans{font-family:var(--f-hanzi);font-size:17px;resize:vertical;min-height:42px}
+.fb{display:flex;flex-direction:column;gap:12px}
+.fb-item{border-top:1px solid var(--line);padding-top:10px;display:flex;flex-direction:column;gap:6px;font-size:14px}
+.fb-item .orig{font:17px/1.5 var(--f-hanzi)}
+.badges{display:flex;flex-wrap:wrap;gap:6px}
+.badge{font:500 11px/1 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;padding:5px 8px;border-radius:4px;border:1px solid currentColor}
+.badge.ok{color:var(--ok)}.badge.no{color:var(--bad)}.badge.meh{color:var(--warn)}
+.natural{background:var(--jade-soft);border-radius:8px;padding:8px 12px}
+.natural .hz{font-size:17px}
+.partner{border:1.5px solid var(--jade);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:8px}
+.partner .hz{font-size:20px;line-height:1.7}
+ul.plain{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+
+/* speak */
+.target{font:600 34px/1.4 var(--f-hanzi);text-align:center}
+.target-py{font:15px/1.5 var(--f-mono);color:var(--muted);text-align:center}
+textarea.dict{font:22px/1.5 var(--f-hanzi);min-height:64px;width:100%;border:2px dashed var(--jade);background:var(--paper);border-radius:10px;padding:10px 12px;resize:vertical}
+.score{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.score b{font:700 40px/1 var(--f-mono)}
+.rtiles{display:flex;flex-wrap:wrap;gap:6px}
+.rt{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px}
+.rt .c{width:50px;height:50px;display:grid;place-items:center;font:600 28px/1 var(--f-hanzi);border-radius:8px;border:1.5px solid currentColor}
+.v-correct{color:var(--ok)}.v-tone{color:var(--warn)}.v-sound{color:var(--bad)}.v-missing{color:var(--t5)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px}
+.legend span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:currentColor;margin-right:5px}
+.pick{display:flex;flex-direction:column;gap:6px;max-height:260px;overflow-y:auto}
+.pick button{display:flex;gap:10px;align-items:baseline;justify-content:space-between;text-align:left;background:var(--sheet);border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer;color:var(--ink)}
+.pick button[aria-current="true"]{border-color:var(--jade);background:var(--jade-soft)}
+.pick .hz{font-size:18px}
+
+/* deck & chat */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--sheet)}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:560px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 11px/1.4 var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+td .hz{font-size:20px}
+tr:last-child td{border-bottom:0}
+.empty{padding:28px;text-align:center;color:var(--muted)}
+.chat{display:flex;flex-direction:column;gap:12px}
+.msg{max-width:88%;padding:10px 14px;border-radius:12px;white-space:pre-wrap;overflow-wrap:anywhere}
+.msg.user{align-self:flex-end;background:var(--jade);color:var(--sheet)}
+.msg.coach{align-self:flex-start;background:var(--sheet);border:1px solid var(--line)}
+.msg .hzs{font-family:var(--f-hanzi)}
+.composer{display:flex;gap:8px;align-items:flex-end}
+.composer textarea{flex:1;min-width:0;border:1px solid var(--line);background:var(--sheet);border-radius:10px;padding:10px 12px;resize:vertical;min-height:46px;font-family:var(--f-body)}
+.spin{display:inline-block;width:12px;height:12px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:sp .8s linear infinite;vertical-align:-1px}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation:none}.track i{transition:none}}
+</style>
+</head>
+<body>
+
+<div class="wrap" id="app">
+  <header class="top">
+    <div class="brand">
+      <div class="seal" aria-hidden="true">八二</div>
+      <div>
+        <h1>Mandarin 80/20 Coach</h1>
+        <p>A six-module course built on the 1,000 words you'll actually use.</p>
+      </div>
+    </div>
+    <div class="meter" aria-label="Progress through the core 1,000 words">
+      <div class="row"><span class="label">Core words learned</span><span><b id="count">0</b> <span class="muted">/ 1,000</span></span></div>
+      <div class="track"><i id="bar"></i></div>
+    </div>
+  </header>
+  <nav class="tabs" role="tablist" id="tabs"></nav>
+  <div class="status" id="status" role="status">Loading your progress…</div>
+  <main id="view"></main>
+</div>
+
+<script>
+"use strict";
+const COURSE = [{"id":1,"title":"Orientation","subtitle":"Start here: how the course works and what you need","classes":[{"id":"1.1","title":"How this course works","kind":"guide","minutes":8,"summary":"Mandarin is big, but everyday speech runs on a small core. This course gets you to that core fast and keeps you there with a daily loop.","points":["The 80/20 rule: roughly the top 1,000 words cover most of what you hear in daily conversation. Every AI lesson in this app draws from that list, plus words from your own life.","The HSK syllabus is the backbone. HSK levels give you a clear ladder, a word list per level and an exam to aim for if you want one.","Every day follows the same loop: review cards, learn a few new words, listen to something you mostly understand, then say and write something.","The six modules build in order: orientation, goals, foundations (pinyin, tones, characters), input (listening and reading), output (speaking and writing) and integration into real life.","Classes marked AI lesson open a full five-step lesson written for you by your coach."],"practice":[],"tasks":["Read the six module titles in the Course list","Decide which days and times you will study this week"]},{"id":"1.2","title":"Mindsets that make Mandarin stick","kind":"guide","minutes":7,"summary":"How you study matters as much as what you study.","points":["Consistency beats intensity. Twenty minutes every day beats three hours on Sunday, because your brain consolidates new words while you sleep. Short, frequent sessions give it more nights to work with.","Input before pressure. You learn a language mainly by understanding it. Speaking improves fastest once you have heard a word many times.","Mistakes are data. Every correction from your coach or a partner shows you exactly where English is leaking into your Chinese.","Characters are built, not memorised. Most characters combine a meaning part (radical) and a sound part. Learning the parts makes new characters easier every week.","Protect your time. If handwriting is not one of your goals, recognise characters and type them in pinyin instead. That saves a great deal of time early on."],"practice":[],"tasks":["Write one sentence about why consistency will be hard for you, and one thing that will help"]},{"id":"1.3","title":"Set up your toolkit","kind":"setup","minutes":15,"summary":"Install the handful of tools the course uses. Five minutes of setup saves hours later.","points":["Chinese keyboard. Android: Settings > System > Languages & input > On-screen keyboard > Gboard > Languages > Add keyboard > Chinese (Simplified, China) > Pinyin. iPhone: Settings > General > Keyboard > Keyboards > Add New Keyboard > Chinese (Simplified) > Pinyin. Windows 11: Settings > Time & language > Language & region > Add a language > Chinese (Simplified, China). Mac: System Settings > Keyboard > Text Input > Edit > + > Chinese, Simplified > Pinyin.","Chinese voice typing. On your phone, switch to the Chinese keyboard and tap its microphone: Gboard on Android and the iPhone keyboard both type what you say in Chinese. The Speak tab uses this to check your pronunciation.","A Chinese voice for the Listen buttons. Android: Settings > Accessibility > Text-to-speech output > Speech Services by Google > Install voice data > Chinese. iPhone: Settings > Accessibility > Spoken Content > Voices > Chinese. Windows: Settings > Time & language > Speech > Add voices > Chinese. Mac: System Settings > Accessibility > Spoken Content > System Voice > Manage Voices > Chinese.","Anki for spaced repetition: AnkiDroid on Android (free), AnkiMobile on iPhone (paid), Anki desktop on Windows or Mac (free, apps.ankiweb.net). A free AnkiWeb account syncs them. This app exports cards to it.","Pleco, the standard Chinese dictionary for Android and iPhone. On a computer, use MDBG (mdbg.net). Every word card in this app links to both.","Language Reactor, a browser extension that adds dual subtitles to Netflix and YouTube.","A graded reader app such as Du Chinese or The Chairman's Bao, for stories at your level."],"practice":[],"tasks":["Add a Chinese pinyin keyboard","Try Chinese voice typing on your phone keyboard","Install a Chinese text-to-speech voice","Install Anki","Install Pleco (or bookmark MDBG on a computer)","Add Language Reactor to your browser"]},{"id":"1.4","title":"Your daily 20-minute routine","kind":"guide","minutes":6,"summary":"One routine you can run every day without thinking about it.","points":["5 minutes: Anki reviews. Do reviews before anything new.","5 minutes: new words. One lesson from this app takes a few days if you do a step a day.","5 minutes: listening. A podcast episode or a graded story you mostly understand.","5 minutes: speaking. Use the Speak tab or the Speak tab, or shadow today's story out loud.","On busy days, do only the Anki reviews. Keeping the streak matters more than the size of the session.","Log your minutes on the Goals & Tracker page so you can see the habit grow."],"practice":[],"tasks":["Pick a fixed time and place for your 20 minutes","Do the routine once today and log it"],"opens":"goals"}]},{"id":2,"title":"Navigation","subtitle":"Make your map: motivation, vision, plan","classes":[{"id":"2.1","title":"Motivation: your why","kind":"guide","minutes":8,"summary":"A written reason keeps you going in week six, when the novelty has gone.","points":["Be specific. “Order food and chat with the owner at my local restaurant” works better than “learn Chinese”.","Name the skills you care about: conversation, reading, typing messages, handwriting, passing an HSK exam. Rank them.","Write down what you will skip for now. Many learners drop handwriting early and type in pinyin instead.","Keep your why where you will see it. It is shown at the top of your Goals page."],"practice":[],"tasks":["Write your motivation on the Goals page","Rank speaking, listening, reading, typing and handwriting"],"opens":"goals"},{"id":"2.2","title":"Vision: levels and milestones","kind":"guide","minutes":10,"summary":"Turn your why into a destination you can measure.","points":["The classic HSK (2.0) has six levels with cumulative word lists of about 150, 300, 600, 1,200, 2,500 and 5,000 words. The HSK Standard Course textbooks follow these levels.","The newer HSK 3.0 standard has nine bands. Bands 1 to 3 need roughly 500, 1,270 and 2,245 words. Check which version your nearest test centre uses before booking an exam.","The core 1,000 words in this app take you to around classic HSK 3–4 for everyday conversation.","Set milestones you can see: 100 words, your first 10-minute conversation, your first graded story read without pinyin, a mock HSK test.","At 10 new words a day you add about 300 a month, before allowing for forgetting. A steady pace gets you to 1,000 core words in four to six months."],"practice":[],"tasks":["Choose a target HSK level and date on the Goals page","Write three milestones for the next three months"],"opens":"goals"},{"id":"2.3","title":"Plan: your weekly rhythm","kind":"guide","minutes":8,"summary":"A plan you can repeat every week, built around a busy life.","points":["Weekdays: the 20-minute routine. Anki, a lesson step, listening, speaking.","Weekend: one textbook chapter (HSK Standard Course plus its workbook) or two app lessons, and a longer listening session.","Once a week: one conversation with a tutor or language partner, with a topic prepared in advance.","Habit-stack listening onto things you already do, such as a podcast on your commute or while cooking.","Set your daily targets on the Goals page: minutes, new cards and speaking attempts."],"practice":[],"tasks":["Set daily minutes and new-card targets on the Goals page","Book or plan this week's conversation"],"opens":"goals"},{"id":"2.4","title":"Track your progress","kind":"guide","minutes":5,"summary":"What gets tracked gets done.","points":["The Goals & Tracker page shows your streak, minutes this week, words learned and classes completed.","New cards and speaking attempts are counted automatically when you finish lessons and check yourself in the Speak tab.","Add your study minutes yourself each day, including time spent outside the app such as podcasts, Anki or a tutor session.","Review the tracker once a week. If you keep missing a target, make the target smaller rather than giving up."],"practice":[],"tasks":["Log today's minutes","Look at your streak at the end of the week"],"opens":"goals"}]},{"id":3,"title":"Foundations","subtitle":"Your first 30 days: pinyin, tones, characters","classes":[{"id":"3.1","title":"Pinyin initials","kind":"drill","minutes":15,"summary":"Mandarin has 21 initial consonants. Most are close to English, and a few need new mouth positions.","points":["b, d, g have no puff of air. They sound closer to the p in “spy” than the b in “boy”. p, t, k have a strong puff: hold a tissue in front of your mouth and it should move.","j, q, x are made with the tongue tip down behind the lower teeth and the middle of the tongue raised. Smile slightly. q has a puff of air.","zh, ch, sh, r curl the tongue tip back towards the roof of the mouth. Lips stay relaxed.","z, c, s keep the tongue tip flat behind the front teeth. c sounds like the “ts” in “cats” with a puff of air.","h comes from further back in the throat than English h, with a little friction.","Use the Speak tab on each pair below. If the app hears the wrong one, check your tongue position, not your volume."],"practice":[{"h":"八 怕","p":"bā pà","e":"eight / afraid (b vs p)"},{"h":"大 他","p":"dà tā","e":"big / he (d vs t)"},{"h":"哥 可","p":"gē kě","e":"older brother / can (g vs k)"},{"h":"鸡 七 西","p":"jī qī xī","e":"chicken / seven / west (j q x)"},{"h":"知 吃 是 日","p":"zhī chī shì rì","e":"know / eat / be / day (zh ch sh r)"},{"h":"字 次 四","p":"zì cì sì","e":"character / time / four (z c s)"},{"h":"是 四","p":"shì sì","e":"be / four (sh vs s)"},{"h":"喝","p":"hē","e":"drink (h)"}],"tasks":["Say every pair until the app hears both sounds correctly","Record yourself on 是 / 四 and compare with the native audio"]},{"id":"3.2","title":"Finals and spelling rules","kind":"drill","minutes":15,"summary":"Finals are the vowel part of a syllable. A few spelling rules hide the real sound.","points":["ü is “ee” said with rounded lips. After j, q, x and y it is written u: 去 qù is really qü.","Three finals are shortened in spelling: iu = iou (六 liù), ui = uei (对 duì), un = uen (问 wèn).","-n and -ng are different sounds. -n ends with the tongue tip on the ridge behind the top teeth. -ng ends with the back of the tongue raised and the mouth open.","After zh, ch, sh, r, z, c and s, the letter i is not “ee”. It is a buzzing continuation of the consonant: 是 shì, 四 sì.","e on its own is a back vowel, similar to the “u” in “duh” said with the tongue pulled back: 喝 hē, 饿 è."],"practice":[{"h":"女 你","p":"nǚ nǐ","e":"woman / you (ü vs i)"},{"h":"去 绿","p":"qù lǜ","e":"go / green"},{"h":"六 对 问","p":"liù duì wèn","e":"six / correct / ask (iu ui un)"},{"h":"山 上","p":"shān shàng","e":"mountain / up (-n vs -ng)"},{"h":"人 能","p":"rén néng","e":"person / can (-en vs -eng)"},{"h":"饿 喝","p":"è hē","e":"hungry / drink (e)"}],"tasks":["Practise the -n / -ng pairs until both score green","Write the full form of liù, duì and wèn from memory"]},{"id":"3.3","title":"The four tones and the neutral tone","kind":"drill","minutes":20,"summary":"Tone changes meaning. mā, má, mǎ and mà are four different words.","points":["Tone 1 (ā): high and level, like holding a note.","Tone 2 (á): rising from middle to high, like a surprised “huh?”.","Tone 3 (ǎ): low. Said alone it dips and rises. In normal speech it is usually just low.","Tone 4 (à): a sharp fall from high to low, like a firm “No!”.","Neutral tone (a): short and light, such as the 吗 at the end of a question.","Exaggerate tones while learning. Native speech flattens them, but clear tones are what make you understood."],"practice":[{"h":"妈 麻 马 骂","p":"mā má mǎ mà","e":"mother / hemp / horse / scold"},{"h":"汤 糖","p":"tāng táng","e":"soup / sugar (1 vs 2)"},{"h":"买 卖","p":"mǎi mài","e":"buy / sell (3 vs 4)"},{"h":"问 吻","p":"wèn wěn","e":"ask / kiss (4 vs 3)"},{"h":"你好吗？","p":"Nǐ hǎo ma?","e":"How are you? (neutral 吗)"},{"h":"谢谢","p":"xièxie","e":"thank you (4 + neutral)"}],"tasks":["Get mā má mǎ mà to 100%","Say 买 and 卖 until the app never mixes them up"]},{"id":"3.4","title":"Tone changes (sandhi)","kind":"drill","minutes":15,"summary":"Three common rules change tones in connected speech. Learn them once and you will hear them everywhere.","points":["Two third tones in a row: the first becomes tone 2. 你好 is written nǐ hǎo but said ní hǎo.","不 bù becomes bú before a fourth tone: 不是 búshì, 不要 búyào. Before other tones it stays bù: 不好 bùhǎo.","一 yī becomes yí before a fourth tone (一个 yí ge, 一样 yíyàng) and yì before tones 1, 2 and 3 (一天 yìtiān, 一起 yìqǐ). It stays yī when counting or at the end of a word (第一 dì-yī).","Textbooks usually write the original tone. Your ear and the audio show the changed one."],"practice":[{"h":"你好","p":"ní hǎo (written nǐ hǎo)","e":"hello"},{"h":"很好","p":"hén hǎo (written hěn hǎo)","e":"very good"},{"h":"不是","p":"búshì","e":"is not"},{"h":"不好","p":"bùhǎo","e":"not good"},{"h":"一个","p":"yí ge","e":"one (of something)"},{"h":"一起","p":"yìqǐ","e":"together"},{"h":"一天","p":"yìtiān","e":"one day"}],"tasks":["Say each phrase with the changed tone","Explain the 一 rule to yourself in one sentence"]},{"id":"3.5","title":"Simplified or Traditional?","kind":"guide","minutes":6,"summary":"Choose one script and stick with it for at least a year.","points":["Simplified characters are used in mainland China, Singapore and most textbooks, including the HSK.","Traditional characters are used in Taiwan, Hong Kong and Macau, and in many older texts.","Many characters are identical in both. Others differ: 话/話, 书/書, 门/門. Learning the second script later is far easier than learning both at once.","Choose the one used by the people and media you care about most. You can change it in your profile."],"practice":[],"tasks":["Confirm your script choice in Settings › Your profile"],"opens":"profile"},{"id":"3.6","title":"Radicals: the building blocks","kind":"drill","minutes":20,"summary":"About 20 radicals appear in a large share of everyday characters. Each one hints at meaning.","points":["氵 water: 河 river, 洗 wash, 汤 soup.  亻 person: 你 you, 他 he, 住 live.","口 mouth: 吃 eat, 喝 drink, 叫 call.  扌 hand: 打 hit, 找 look for, 拿 hold.","木 tree/wood: 林 woods, 桌 table.  艹 grass/plant: 茶 tea, 花 flower, 菜 vegetable.","讠 speech: 说 speak, 话 speech, 语 language.  女 woman: 妈 mother, 好 good, 姐 older sister.","日 sun/day: 明 bright, 时 time, 早 early.  忄/心 heart: 想 think, 忙 busy, 快 fast.","饣 food: 饭 meal, 饿 hungry.  辶 walking: 进 enter, 远 far, 这 this.  宀 roof: 家 home, 字 character.","Many characters also contain a sound part. 妈 mā, 吗 ma and 骂 mà all borrow the sound of 马 mǎ."],"practice":[{"h":"喝水","p":"hē shuǐ","e":"drink water (口 + 氵)"},{"h":"说话","p":"shuō huà","e":"speak (讠)"},{"h":"吃饭","p":"chī fàn","e":"eat a meal (口 + 饣)"},{"h":"回家","p":"huí jiā","e":"go home (宀)"},{"h":"我很忙","p":"Wǒ hěn máng","e":"I'm busy (忄)"}],"tasks":["Find each radical in a word you already know","Look up 3 new characters in Pleco and name their radicals"]},{"id":"3.7","title":"Typing vs handwriting","kind":"guide","minutes":6,"summary":"Decide how much handwriting you need. It is the most time-consuming skill and the one adults use least.","points":["Typing: type the pinyin and choose the character. You need to recognise characters, not reproduce them. This is how most people write Chinese day to day.","Handwriting builds deep memory of characters, but takes a lot of time per character.","A middle path: learn stroke-order principles (top to bottom, left to right, outside before inside, close the box last) and write only the radicals and your most common characters.","The deconstruction step in each lesson includes a writing tip for every character, so you can choose how far to go."],"practice":[],"tasks":["Type 你好，我叫… with your name using the pinyin keyboard","Decide: full handwriting, radicals only, or typing only"]},{"id":"3.8","title":"Using a textbook well","kind":"guide","minutes":8,"summary":"The HSK Standard Course gives structure. This is how to get the most from one chapter.","points":["Before: skim the new-word list and listen to the dialogue once without reading.","During: read the dialogue with audio, then study the grammar notes. Add only the words you will actually use to Anki.","After: do the workbook exercises, then shadow the dialogue until you can say it at full speed.","Pace: one chapter a week (for example at the weekend) fits most busy schedules.","Ask the coach about any grammar point you don't understand. It knows the HSK syllabus."],"practice":[],"tasks":["Get the HSK Standard Course 1 textbook and workbook, or another structured course","Plan which day each week is textbook day"]},{"id":"3.9","title":"First words: greetings and introductions","kind":"aiLesson","minutes":25,"summary":"Your first AI lesson: say hello, give your name and where you're from, and ask someone else.","points":["This class opens a full five-step lesson: deconstruction, Anki cards, a story, the clinic and your 5-sentence challenge.","Key patterns: 我叫… (my name is…), 我是…人 (I'm from…), 你呢？(and you?)."],"practice":[{"h":"你好！","p":"Nǐ hǎo!","e":"Hello!"},{"h":"我叫…","p":"Wǒ jiào…","e":"My name is…"},{"h":"我是英国人。","p":"Wǒ shì Yīngguó rén.","e":"I'm British."},{"h":"你呢？","p":"Nǐ ne?","e":"And you?"},{"h":"很高兴认识你。","p":"Hěn gāoxìng rènshi nǐ.","e":"Nice to meet you."}],"tasks":["Finish the AI lesson","Introduce yourself out loud in three sentences"],"focus":"greetings, names, nationality and introducing yourself (HSK 1)","hsk":1},{"id":"3.10","title":"Numbers, dates and time","kind":"aiLesson","minutes":25,"summary":"Count, give prices and say the date and time.","points":["Numbers build logically: 十一 is ten-one (11), 二十 is two-ten (20), 二十一 is 21.","Use 两 liǎng, not 二 èr, before a measure word: 两个人 (two people). Use 二 when counting and in numbers: 二十.","Dates go from big to small: year, month, day, weekday."],"practice":[{"h":"一二三四五六七八九十","p":"yī èr sān sì wǔ liù qī bā jiǔ shí","e":"one to ten"},{"h":"两个人","p":"liǎng ge rén","e":"two people"},{"h":"多少钱？","p":"Duōshao qián?","e":"How much is it?"},{"h":"现在几点？","p":"Xiànzài jǐ diǎn?","e":"What time is it now?"},{"h":"今天星期几？","p":"Jīntiān xīngqī jǐ?","e":"What day is it today?"}],"tasks":["Finish the AI lesson","Say today's date and the time out loud in Chinese"],"focus":"numbers, prices, dates, days of the week and telling the time, including 二 vs 两 (HSK 1)","hsk":1}]},{"id":4,"title":"Input Engine","subtitle":"Listening and reading you can understand","classes":[{"id":"4.1","title":"Comprehensible input","kind":"guide","minutes":8,"summary":"You acquire a language by understanding messages in it. Input works best when it is just above your level.","points":["Aim for material where you know about 95% of the words. Too easy teaches little, and too hard is just noise.","Repetition is good. Listening to the same story five times beats five different stories you half understand.","Mix two kinds: focused input (studying a short text closely) and volume (lots of easy listening and reading).","For beginners: kids' shows such as 小猪佩奇 (Peppa Pig), beginner podcasts and graded readers. Dramas and native podcasts come later."],"practice":[],"tasks":["Find one show or podcast where you understand at least some sentences","Listen to one episode twice"]},{"id":"4.2","title":"Intensive vs extensive reading","kind":"guide","minutes":8,"summary":"Two kinds of reading do two different jobs. You need both.","points":["Intensive: a short text studied closely. Look up every unknown word, understand every grammar point, then read it aloud. This builds accuracy.","Extensive: lots of easy text read quickly for meaning, with no dictionary. This builds speed and automatic recognition.","The graded story in every lesson is intensive reading. A graded reader app at a slightly lower level is extensive reading.","A good ratio for beginners is about 1 intensive text to 3 easy ones."],"practice":[],"tasks":["Read today's lesson story intensively","Read one easy graded story without looking anything up"],"opens":"reader"},{"id":"4.3","title":"Graded readers","kind":"guide","minutes":10,"summary":"Graded readers are stories written with limited vocabulary, so you can read real paragraphs early.","points":["Read first without help. Then use the toggles to check word boundaries, pinyin and English.","Read a story three times: once for gist, once intensively and once aloud while shadowing.","Du Chinese and The Chairman's Bao sort stories by HSK level. Start one level below where you think you are.","Add sentences you like (not just words) to Anki. Sentences give words context."],"practice":[],"tasks":["Read the latest lesson story with all help switched off","Try one story in a graded reader app"],"opens":"reader"},{"id":"4.4","title":"Fixing listening bottlenecks","kind":"guide","minutes":10,"summary":"If you can read something but not follow it by ear, find out which of three problems is the cause.","points":["Sound recognition: you know the word but don't recognise it by sound. Fix: listen while reading the transcript, then without it.","Vocabulary: the words are new. Fix: easier material, or study the transcript first.","Speed: you understand slowly but lose the thread at full speed. Fix: repeat the same audio, use slow playback, then go back to normal speed.","Test yourself: play a sentence, write what you hear in pinyin, then check. The errors show which problem you have."],"practice":[],"tasks":["Do the dictation test on three sentences from today's story","Note which bottleneck you hit most"]},{"id":"4.5","title":"Anki: cards that work","kind":"setup","minutes":15,"summary":"Spaced repetition moves words into long-term memory with as little review time as possible.","points":["New cards per day: about 10. More than that piles up reviews within a few weeks.","Always finish reviews before adding new cards.","Use active recall. Look at the character, say the pinyin and meaning out loud, then flip the card.","Sentence cards with native audio teach words in context. Your exported cards include a sentence, its pinyin and its translation.","Delete or suspend cards you already know well. Reviewing known material wastes time.","Import: in this app go to Deck & Anki › Export, then in Anki choose File › Import."],"practice":[],"tasks":["Set new cards per day to 10 in Anki","Export your deck from this app and import it into Anki"],"opens":"deck"},{"id":"4.6","title":"Sentence mining with subtitles","kind":"guide","minutes":10,"summary":"Collect real sentences from shows you enjoy and turn them into cards.","points":["Language Reactor shows Chinese and English subtitles together on Netflix and YouTube. You can hover over any word for a definition.","When a sentence is almost fully understood but has one new word, save it. That single new word is the one most worth learning.","Pause, repeat the line aloud and copy the speaker's rhythm.","Paste mined sentences into Ask the Coach for a breakdown of grammar and natural usage."],"practice":[],"tasks":["Mine 3 sentences from one episode","Ask the coach to break down one of them"],"opens":"coach"},{"id":"4.7","title":"Daily life: food and shopping","kind":"aiLesson","minutes":25,"summary":"Order food, say what you like and buy things.","points":["Key patterns: 我要… (I'd like…), 我想吃… (I want to eat…), 有没有…？(do you have…?), 太…了 (too/so…).","Measure words appear with every noun you count: 一杯茶, 一碗饭, 一个包子."],"practice":[{"h":"我要一杯茶。","p":"Wǒ yào yì bēi chá.","e":"I'd like a cup of tea."},{"h":"有没有米饭？","p":"Yǒu méiyǒu mǐfàn?","e":"Do you have rice?"},{"h":"太好吃了！","p":"Tài hǎochī le!","e":"It's delicious!"},{"h":"买单。","p":"Mǎidān.","e":"The bill, please."}],"tasks":["Finish the AI lesson","Order an imaginary meal out loud"],"focus":"food, ordering in a restaurant, shopping, likes and measure words (HSK 1–2)","hsk":2}]},{"id":5,"title":"Output Arena","subtitle":"Speaking and writing with real people","classes":[{"id":"5.1","title":"When to start speaking","kind":"guide","minutes":6,"summary":"Speak from day one by shadowing. Start real conversations once you have a few hundred words.","points":["Days 1–30: shadowing and Speak-tab checks to train sounds and tones.","Around 200–300 words: short, prepared conversations such as introductions, food and plans.","Around 500+ words: open conversations with a patient partner.","Keep sessions short and frequent. Two 20-minute chats a week beat one long session a month."],"practice":[],"tasks":["Count your words in the Deck and set a date for your first conversation"]},{"id":"5.2","title":"Shadowing","kind":"speaking","minutes":15,"summary":"Copy native audio a fraction of a second behind the speaker. It trains rhythm, tones and fluency at the same time.","points":["Listen to a sentence once. Then play it again and speak along just behind it, copying pitch and rhythm rather than just the words.","Start at slow speed. Move to normal speed when you can keep up.","Use the shadowing guide in the reader: / marks a short pause and ‖ marks a sentence end.","Check each sentence in the Speak tab: dictate it with your phone's Chinese keyboard and see what was heard."],"practice":[],"tasks":["Shadow every sentence of the latest story","Get each sentence to 80% or more in the Speak tab"],"opens":"drill"},{"id":"5.3","title":"Tutors and language partners","kind":"guide","minutes":10,"summary":"Native speakers check that your Chinese works in real life.","points":["Paid tutors (for example on italki or Preply) give structure and correction. Language exchanges (Tandem, HelloTalk, Language.Exchange) are free: half the time in Chinese, half in English.","Partners in mainland China often prefer WeChat for messages and calls.","Book short sessions of 20–30 minutes. Bring a prepared topic and two or three questions.","Ask for corrections in writing after the call, and for a voice note of the corrected sentences to shadow.","Send your partner the daily message from each lesson's Native Partner Polish."],"practice":[],"tasks":["Sign up on one tutor or exchange platform","Send your first message to a partner"]},{"id":"5.4","title":"Prepared conversation topics","kind":"speaking","minutes":20,"summary":"Have a few topics ready so conversations don't stall.","points":["Prepare 3–5 sentences each about yourself, your family, your work, your hobbies and your weekend.","Prepare one question for each topic to hand the conversation back.","Practise each sentence in the Speak tab before the session.","After the session, add the corrections you received to Anki."],"practice":[{"h":"我住在伦敦。","p":"Wǒ zhù zài Lúndūn.","e":"I live in London."},{"h":"我在做视频剪辑的工作。","p":"Wǒ zài zuò shìpín jiǎnjí de gōngzuò.","e":"I work in video editing."},{"h":"周末你一般做什么？","p":"Zhōumò nǐ yìbān zuò shénme?","e":"What do you usually do at weekends?"},{"h":"你学中文学了多久？","p":"Nǐ xué Zhōngwén xué le duōjiǔ?","e":"How long have you studied Chinese? (to ask a learner)"},{"h":"请再说一遍。","p":"Qǐng zài shuō yí biàn.","e":"Please say that again."},{"h":"请说慢一点。","p":"Qǐng shuō màn yìdiǎn.","e":"Please speak a bit more slowly."}],"tasks":["Write 3 sentences about your work or hobbies","Practise them in the Speak tab until they score 80%+"]},{"id":"5.5","title":"Building a writing habit","kind":"guide","minutes":8,"summary":"Writing is slow speaking. It gives you time to build sentences correctly.","points":["Every lesson ends with the 5-sentence challenge. It is your main writing practice.","Keep a daily three-sentence journal: what you did, what you will do, how you feel.","Type with the pinyin keyboard unless handwriting is one of your goals.","Get corrections from your coach (Native Partner Polish) or partner, and rewrite the corrected version once."],"practice":[],"tasks":["Write today's three-sentence journal and paste it into Ask the Coach for corrections"],"opens":"coach"},{"id":"5.6","title":"Talking about work and hobbies","kind":"aiLesson","minutes":25,"summary":"An AI lesson built around your own topics, so you can talk about your life.","points":["The coach uses the topics in your profile to choose the vocabulary.","Key patterns: 我喜欢… (I like…), 我每天… (every day I…), 因为…所以… (because… so…)."],"practice":[],"tasks":["Finish the AI lesson","Use two of its words in a message to your language partner"],"focus":"talking about the learner's own work, hobbies and daily routine using their profile topics; patterns 喜欢, 每天, 因为…所以… (HSK 2)","hsk":2}]},{"id":6,"title":"Integration","subtitle":"Real-life routines that last","classes":[{"id":"6.1","title":"Habit stacking","kind":"guide","minutes":6,"summary":"Attach Mandarin to things you already do every day.","points":["Morning coffee: Anki reviews.","Commute or walk: a podcast episode.","Cooking: replay today's story, or name what you're doing in Chinese (我在切菜).","Before bed: one Speak-tab check. Sleep helps consolidate it."],"practice":[],"tasks":["Choose two existing habits and attach a Mandarin task to each"]},{"id":"6.2","title":"The minimum viable day","kind":"guide","minutes":5,"summary":"Decide now what you'll do on your worst day, so the streak survives.","points":["Minimum: 5 minutes of Anki reviews. That counts as a study day.","If you miss a day, the rule is never miss two days in a row.","Burnout warning signs: dreading reviews, or a backlog of 200+ cards. Fix: pause new cards for a week and keep reviewing.","Holidays: switch to listening only rather than stopping completely."],"practice":[],"tasks":["Write your minimum viable day on the Goals page"],"opens":"goals"},{"id":"6.3","title":"The weekly review","kind":"guide","minutes":10,"summary":"Fifteen minutes on Sunday keeps the whole plan on track.","points":["Check the tracker: minutes, streak, new words and speaking attempts.","Read back through the feedback from this week's Native Partner Polish and note the mistakes that repeat.","Plan next week: textbook chapter, lessons, conversation topic.","Adjust targets. Lower a target you keep missing, and raise one that feels easy."],"practice":[],"tasks":["Do a weekly review this Sunday"],"opens":"goals"},{"id":"6.4","title":"Your media ladder","kind":"guide","minutes":8,"summary":"Climb from kids' shows to native content, one rung at a time.","points":["Rung 1: 小猪佩奇 (Peppa Pig) and other kids' shows. Short sentences, clear speech, lots of repetition.","Rung 2: learner podcasts and graded readers at your HSK level.","Rung 3: slice-of-life dramas and variety shows with Chinese subtitles via Language Reactor.","Rung 4: native podcasts, news and dramas without English subtitles.","Move up a rung when you understand most of the current one without subtitles."],"practice":[],"tasks":["Choose one show for your current rung and watch an episode"]},{"id":"6.5","title":"Capstone: one-minute introduction","kind":"speaking","minutes":20,"summary":"Bring it all together: introduce yourself for one minute, with clear tones, and check it with the app.","points":["Cover your name, where you live, your work, your hobbies, why you're learning Chinese and a question for the listener.","Write it first, get it polished by the coach, then practise each sentence in the Speak tab.","Record the whole thing and send it to your language partner for feedback.","Repeat this capstone every few months. It's the clearest measure of your progress."],"practice":[{"h":"大家好，我叫…","p":"Dàjiā hǎo, wǒ jiào…","e":"Hello everyone, my name is…"},{"h":"我住在伦敦。","p":"Wǒ zhù zài Lúndūn.","e":"I live in London."},{"h":"我学中文是因为…","p":"Wǒ xué Zhōngwén shì yīnwèi…","e":"I'm learning Chinese because…"},{"h":"我的爱好是…","p":"Wǒ de àihào shì…","e":"My hobby is…"},{"h":"谢谢大家！","p":"Xièxie dàjiā!","e":"Thank you, everyone!"}],"tasks":["Write your one-minute introduction","Get every sentence to 80%+ in the Speak tab","Send the recording to your partner"],"opens":"coach"}]}];
+const ALL_CLASSES = COURSE.flatMap(m => m.classes.map(c => ({...c, module: m.id})));
+const TABS = [["course","Course"],["goals","Goals"],["lesson","Lesson"],["speak","Speak"],["deck","Deck & Anki"],["coach","Ask the coach"],["profile","Profile"]];
+const KIND = {guide:"Guide", drill:"Drill", aiLesson:"AI lesson", setup:"Setup", speaking:"Speaking"};
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const ESC = {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"};
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ESC[c]);
+const arr = v => Array.isArray(v) ? v : [];
+const str = v => (v == null ? "" : String(v));
+const TONES = {1:"āēīōūǖĀĒĪŌŪǕ",2:"áéíóúǘÁÉÍÓÚǗ",3:"ǎěǐǒǔǚǍĚǏǑǓǙ",4:"àèìòùǜÀÈÌÒÙǛ"};
+function toneOf(py){ for (const t of [1,2,3,4]) for (const ch of str(py)) if (TONES[t].includes(ch)) return t; return 5; }
+const SLOT_LABELS = ["Statement","Question","Negation","Past or future","About your life"];
+const LEVELS = {beginner:"Complete beginner", basics:"Some basics", intermediate:"Intermediate"};
+const dayKey = d => { const x = d || new Date(); return x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0"); };
+function setStatus(t){ $("#status").textContent = t || ""; }
+const NO_KEY = "AI lessons and the coach need your own API key: a free Google Gemini key or an Anthropic Claude key. Add it on the Profile tab. Everything else works without one.";
+function errCopy(e){
+  const c = e && e.code;
+  const who = AI.provider() === "gemini" ? "Google" : "Anthropic";
+  if (c === "bad_key") return who + " rejected the API key. Check it on the Profile tab.";
+  if (c === "quota") return "You've used up this key's free or daily allowance. Wait (free limits reset daily), switch to a smaller model on the Profile tab, or turn on billing for the key.";
+  if (c === "forbidden") return who + " refused the request. The key may not have access to this model, or the API isn't enabled for it.";
+  if (c === "no_credit") return "Your " + who + " account needs credit or billing turned on. Then try again.";
+  if (c === "rate_limited") return who + "'s rate limit was hit. Wait a minute, then try again.";
+  if (c === "overloaded") return "Claude is overloaded right now. Try again in a minute.";
+  if (c === "network") return "Couldn't reach " + who + ". Check your internet connection, then try again.";
+  if (c === "truncated") return "The answer was cut off. Try again, or ask for fewer words.";
+  if (c === "bad_model") return "That model isn't available on your API key. Pick another on the Profile tab.";
+  if (c === "invalid_json") return "The lesson came back in an unreadable shape. Try again.";
+  if (c === "refused") return "Claude declined that request. Try rewording it.";
+  if (c === "cancelled") return "Stopped.";
+  return "Something went wrong reaching Claude" + (e && e.message ? ": " + e.message : ".") + " Try again.";
+}
+
+/* ---------- sample lesson ---------- */
+const SAMPLE = {"words":[
+ {"hanzi":"时间","pinyin":"shíjiān","meaning":"time; a stretch of time","literal":"时 time, hour + 间 interval, the space between = the stretch between two moments.","personal":false,
+  "characters":[
+   {"char":"时","pinyin":"shí","meaning":"time, hour","radical":"日 sun: time was read from the sun","phonetic":"寸 cùn on the right (traditional 時 uses 寺 sì as the sound hint)","stroke":"Keep 日 narrow on the left. In 寸, write the long horizontal, then the hooked vertical, and the dot last."},
+   {"char":"间","pinyin":"jiān","meaning":"between, room, interval","radical":"门 door","phonetic":"No sound hint: it is a picture-idea, sunlight 日 showing through the gap of a door","stroke":"Write the 门 frame first (dot, vertical, hooked frame), then put 日 inside it last."}],
+  "family":[{"hanzi":"时候","pinyin":"shíhou","meaning":"time, moment (when…)"},{"hanzi":"小时","pinyin":"xiǎoshí","meaning":"hour"},{"hanzi":"房间","pinyin":"fángjiān","meaning":"room"}],
+  "anki":{"sentence":"我今天没有时间。","pinyin":"Wǒ jīntiān méiyǒu shíjiān.","english":"I don't have time today.","image":"wall clock next to a crowded diary page"},
+  "pronunciation":"shí is retroflex: curl the tongue tip up towards the ridge behind your top teeth without touching it. jiān is palatal: tongue tip down behind the lower teeth, front of the tongue arched up, lips spread. Say jiān as one quick glide, never 'jee-an'."},
+ {"hanzi":"电话","pinyin":"diànhuà","meaning":"telephone; phone call","literal":"电 electric + 话 speech = electric speech.","personal":false,
+  "characters":[
+   {"char":"电","pinyin":"diàn","meaning":"electricity, lightning","radical":"A picture of lightning; the older form put 雨 rain over 申, a lightning bolt","phonetic":"None in the modern form","stroke":"Write the box and its middle line, then finish with the vertical that curves and hooks up to the right, always last."},
+   {"char":"话","pinyin":"huà","meaning":"speech, words","radical":"讠 speech (short form of 言)","phonetic":"舌 shé, tongue. It doubles as a meaning hint: words come off the tongue","stroke":"讠 is two strokes: a dot, then a horizontal that bends down and flicks up. Keep it slim so 舌 has room."}],
+  "family":[{"hanzi":"电脑","pinyin":"diànnǎo","meaning":"computer (electric brain)"},{"hanzi":"电视","pinyin":"diànshì","meaning":"television (electric seeing)"},{"hanzi":"说话","pinyin":"shuōhuà","meaning":"to speak"}],
+  "anki":{"sentence":"晚上我给妈妈打电话。","pinyin":"Wǎnshang wǒ gěi māma dǎ diànhuà.","english":"In the evening I phone my mum.","image":"person smiling on a phone call at night"},
+  "pronunciation":"Two fourth tones: drop sharply from high to low, like a firm 'No!'. Make the second fall slightly lighter. The h in huà comes from the back of the throat with friction, closer to Scottish 'loch' than English 'h'."},
+ {"hanzi":"喜欢","pinyin":"xǐhuan","meaning":"to like","literal":"喜 joy + 欢 glad = to take pleasure in.","personal":false,
+  "characters":[
+   {"char":"喜","pinyin":"xǐ","meaning":"joy, happiness","radical":"口 mouth","phonetic":"壴, a drum on a stand: drum plus mouth, music and singing at a celebration","stroke":"Build a tall, narrow column: 士 on top, a small 口, the two dots and horizontal, and the bottom 口 last."},
+   {"char":"欢","pinyin":"huān","meaning":"glad, merry","radical":"欠 a person breathing out with an open mouth","phonetic":"又 is a simplification; traditional 歡 uses 雚 guàn as the sound hint","stroke":"Write 又 small and tucked on the left, then 欠 with a long sweeping final stroke."}],
+  "family":[{"hanzi":"欢迎","pinyin":"huānyíng","meaning":"welcome"},{"hanzi":"恭喜","pinyin":"gōngxǐ","meaning":"congratulations"},{"hanzi":"喜事","pinyin":"xǐshì","meaning":"happy event, a wedding"}],
+  "anki":{"sentence":"你喜欢喝茶吗？","pinyin":"Nǐ xǐhuan hē chá ma?","english":"Do you like drinking tea?","image":"steaming cup of green tea"},
+  "pronunciation":"欢 is neutral tone here: xǐhuan, short and light. Third-tone sandhi: before 喜, 我 and 你 rise, so 我喜欢 is said wó xǐhuan. For x, put the tongue tip behind the lower teeth and smile; it is never English 'sh' or 'ks'."}],
+ "story":{"hanzi":"我很喜欢打电话。可是我没有时间。我每天工作，晚上很累。今天是星期六，我有时间了！我给妈妈打电话。妈妈很高兴，我也很高兴。",
+  "segmented":"我 很 喜欢 打 电话 。 可是 我 没有 时间 。 我 每天 工作 ， 晚上 很 累 。 今天 是 星期六 ， 我 有 时间 了 ！ 我 给 妈妈 打 电话 。 妈妈 很 高兴 ， 我 也 很 高兴 。",
+  "pinyin":"Wǒ hěn xǐhuan dǎ diànhuà. Kěshì wǒ méiyǒu shíjiān. Wǒ měitiān gōngzuò, wǎnshang hěn lèi. Jīntiān shì xīngqīliù, wǒ yǒu shíjiān le! Wǒ gěi māma dǎ diànhuà. Māma hěn gāoxìng, wǒ yě hěn gāoxìng.",
+  "english":"I really like making phone calls. But I don't have time. I work every day, and in the evening I'm tired. Today is Saturday, and now I have time! I phone my mum. Mum is very happy, and so am I.",
+  "shadowing":"我很喜欢 / 打电话。// 可是 / 我没有时间。// 我每天工作，/ 晚上很累。// 今天是星期六，/ 我有时间了！// 我给妈妈 / 打电话。// 妈妈很高兴，/ 我也很高兴。",
+  "stress":"The turning point is 我有时间了: lift the pitch on 时间 and let 了 fall away lightly. 我很喜欢 is three third tones in a row; say wǒ hén xǐhuan, or wó hén xǐhuan at speed."},
+ "clinic":{"title":"了 marks a change, not the past tense",
+  "body":"English speakers treat 了 as a past-tense marker, but nothing is past in 我有时间了. Sentence-final 了 announces that the situation is new: before I had no time, now I do. Compare 过, which marks experience: 我给她打过电话 means I have phoned her at some point.",
+  "examples":[{"wrong":"我昨天有时间了。","right":"我昨天有时间。","why":"Having time yesterday is a plain fact, not a change. 昨天 already sets the past."},
+              {"wrong":"我打电话我妈妈。","right":"我给我妈妈打电话。","why":"The person goes before the verb with 给. English 'call my mum' order does not carry over."}],
+  "nativeNote":"In daily speech people say 打个电话 (give a quick call) and drop 我 when it is obvious: 晚上给你打个电话。"}};
+
+/* ---------- state ---------- */
+const S = { profile:null, current:null, words:[], progress:{}, days:{}, store:null, view:"course", openClass:null, chat:[],
+  reader:{seg:false, py:false, en:false, shadow:false}, busy:null, ctl:null, lastError:"", editGoals:false,
+  speak:{source:"lesson", idx:0, custom:null, result:null, heard:""} };
+
+/* ---------- storage: your Claude account when allowed, else this browser ---------- */
+function localStore(){
+  const KEY = "m8020-v2";
+  const read = () => { try { return JSON.parse(localStorage.getItem(KEY) || localStorage.getItem("m8020-v1") || "{}"); } catch { return {}; } };
+  const write = o => { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch {} };
+  const put = (k, v) => { const o = read(); o[k] = v; write(o); };
+  return {
+    kind:"local",
+    async load(){ const o = read(); return { profile:o.profile||null, current:o.current||null, words:arr(o.words), progress:o.progress||{}, days:o.days||{} }; },
+    async saveProfile(p){ put("profile", p); },
+    async saveCurrent(c){ put("current", c); },
+    async addWords(list){ const o = read(); o.words = arr(o.words).concat(list); write(o); },
+    async saveProgress(p){ put("progress", p); },
+    async saveDays(d){ put("days", d); },
+    async reset(){ try { localStorage.removeItem(KEY); localStorage.removeItem("m8020-v1"); } catch {} }
+  };
+}
+/* ---------- AI: each visitor's own Gemini or Anthropic API key, kept in this browser only ---------- */
+const MODELS = {
+  anthropic: [["claude-sonnet-5-5","Claude Sonnet 5.5 · best lessons · about 10p per lesson"],["claude-haiku-5-5","Claude Haiku 5.5 · fastest · under 1p per lesson"],["claude-opus-5-5","Claude Opus 5.5 · most thorough · costs most"]],
+  gemini: [["gemini-3-flash-preview","Gemini 3 Flash · recommended · free tier"],["gemini-2.5-flash","Gemini 2.5 Flash · stable · free tier"],["gemini-2.5-pro","Gemini 2.5 Pro · most thorough · free tier, slower"],["gemini-3.1-pro-preview","Gemini 3.1 Pro · paid only"]]
+};
+const providerOf = k => /^sk-ant-/.test(k) ? "anthropic" : /^AIza/.test(k) ? "gemini" : "";
+const AI = {
+  key(){ try { return localStorage.getItem("m8020-key") || ""; } catch { return ""; } },
+  provider(){ return providerOf(this.key()); },
+  model(){ const pv = this.provider() || "anthropic", list = MODELS[pv]; let m = ""; try { m = localStorage.getItem("m8020-model-" + pv) || ""; } catch {} return list.some(x => x[0] === m) ? m : list[0][0]; },
+  set(k, m){ try { k ? localStorage.setItem("m8020-key", k) : localStorage.removeItem("m8020-key"); const pv = providerOf(k); if (m && pv) localStorage.setItem("m8020-model-" + pv, m); } catch {} }
+};
+function makeSample(){
+  if (!AI.key()) return null;
+  async function readSSE(res, onData){
+    const reader = res.body.getReader(), dec = new TextDecoder();
+    let buf = "";
+    try {
+      for (;;) {
+        const { value, done } = await reader.read(); if (done) break;
+        buf += dec.decode(value, {stream:true}).replace(/\r\n/g, "\n");
+        let i;
+        while ((i = buf.indexOf("\n\n")) >= 0) {
+          const ev = buf.slice(0, i); buf = buf.slice(i + 2);
+          const line = ev.split("\n").find(l => l.startsWith("data:")); if (!line) continue;
+          let d; try { d = JSON.parse(line.slice(5)); } catch { continue; }
+          onData(d);
+        }
+      }
+    } catch (e) { if (e && e.code) throw e; throw (e && e.name === "AbortError") ? {code:"cancelled"} : {code:"network"}; }
+  }
+  async function post(url, headers, body, signal){
+    let res;
+    try { res = await fetch(url, { method:"POST", signal, headers:{"content-type":"application/json", ...headers}, body:JSON.stringify(body) }); }
+    catch (e) { throw (e && e.name === "AbortError") ? {code:"cancelled"} : {code:"network"}; }
+    if (!res.ok) {
+      let m = ""; try { const j = await res.json(); m = (j.error || {}).message || ""; } catch {}
+      const st = res.status;
+      throw { code: (st === 401 || /api key not valid|API_KEY_INVALID|invalid x-api-key/i.test(m)) ? "bad_key"
+        : st === 429 ? (/quota/i.test(m) ? "quota" : "rate_limited")
+        : (st === 529 || st === 503) ? "overloaded"
+        : /credit|billing/i.test(m) ? "no_credit"
+        : st === 404 ? "bad_model"
+        : st === 403 ? "forbidden" : "http", message:m };
+    }
+    return res;
+  }
+  async function call(input, opts = {}){
+    const messages = typeof input === "string" ? [{role:"user", content:input}] : input;
+    let text = "", stop = "";
+    const add = t => { if (!t) return; text += t; if (opts.onText) opts.onText({text, delta:t}); };
+    if (AI.provider() === "gemini") {
+      const body = { contents: messages.map(m => ({ role: m.role === "assistant" ? "model" : "user", parts:[{text:m.content}] })),
+        generationConfig: { maxOutputTokens: Math.max(opts.maxTokens || 12000, 2048) * 3, ...(opts.json ? {responseMimeType:"application/json"} : {}) } };
+      const res = await post(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(AI.model())}:streamGenerateContent?alt=sse`, {"x-goog-api-key":AI.key()}, body, opts.signal);
+      await readSSE(res, d => {
+        if (d.error) throw {code:"http", message:d.error.message};
+        const c = (d.candidates || [])[0]; if (!c) { if (d.promptFeedback && d.promptFeedback.blockReason) throw {code:"refused"}; return; }
+        for (const part of ((c.content || {}).parts || [])) if (!part.thought) add(part.text);
+        if (c.finishReason) stop = c.finishReason;
+      });
+      if (stop === "MAX_TOKENS") throw {code:"truncated"};
+      if (stop === "SAFETY" || stop === "PROHIBITED_CONTENT") throw {code:"refused"};
+    } else {
+      const res = await post("https://api.anthropic.com/v1/messages",
+        { "x-api-key":AI.key(), "anthropic-version":"2023-06-01", "anthropic-dangerous-direct-browser-access":"true" },
+        { model:AI.model(), max_tokens:opts.maxTokens || 12000, stream:true, messages }, opts.signal);
+      await readSSE(res, d => {
+        if (d.type === "content_block_delta" && d.delta && d.delta.type === "text_delta") add(d.delta.text);
+        else if (d.type === "message_delta" && d.delta) stop = d.delta.stop_reason || stop;
+        else if (d.type === "error") throw {code:(d.error && d.error.type === "overloaded_error") ? "overloaded" : "http", message:d.error && d.error.message};
+      });
+      if (stop === "max_tokens") throw {code:"truncated"};
+    }
+    return {text, truncated:false};
+  }
+  const f = (input, opts) => call(input, opts);
+  f.json = async (input, opts) => {
+    const { text } = await call(input, {...(opts || {}), json:true});
+    const a = text.indexOf("{"), b = text.lastIndexOf("}");
+    if (a < 0 || b <= a) throw {code:"invalid_json"};
+    try { return JSON.parse(text.slice(a, b + 1)); } catch { throw {code:"invalid_json"}; }
+  };
+  return f;
+}
+const browserDownloads = { async save({filename, data}){
+  const blob = new Blob(["﻿" + data], {type:"text/csv;charset=utf-8"});
+  const url = URL.createObjectURL(blob), a = document.createElement("a");
+  a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+} };
+const use = async n => n === "sample" ? makeSample() : n === "downloads" ? browserDownloads : null;
+async function initStore(){ return localStore(); }
+async function initStore(){ return localStore(); }
+async function persist(fn){
+  try { await fn(S.store); }
+  catch (e) {
+    if (S.store && S.store.kind === "db") {
+      S.store = localStore();
+      await S.store.saveProfile(S.profile); await S.store.saveCurrent(S.current);
+      await S.store.saveProgress(S.progress); await S.store.saveDays(S.days);
+      const o = (() => { try { return JSON.parse(localStorage.getItem("m8020-v2") || "{}"); } catch { return {}; } })();
+      o.words = S.words; try { localStorage.setItem("m8020-v2", JSON.stringify(o)); } catch {}
+      setStatus("Your progress is saved in this browser.");
+    }
+  }
+}
+function today(){ const k = dayKey(); return (S.days[k] = S.days[k] || {minutes:0, newCards:0, speaking:0, classes:0, conversations:0}); }
+function bump(field, n){ today()[field] = Math.max(0, (today()[field] || 0) + n); persist(s => s.saveDays(S.days)); }
+
+/* ---------- speech ---------- */
+const HAS_TTS = typeof window.speechSynthesis !== "undefined" && typeof window.SpeechSynthesisUtterance !== "undefined";
+function speak(text, slow){
+  if (!HAS_TTS) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(str(text).replace(/\/\//g, "。").replace(/\//g, "，").replace(/…/g, ""));
+    const lang = S.profile && S.profile.script === "traditional" ? "zh-TW" : "zh-CN";
+    u.lang = lang;
+    const vs = speechSynthesis.getVoices();
+    const v = vs.find(v => v.lang.replace("_","-").toLowerCase() === lang.toLowerCase()) || vs.find(v => /^zh|^cmn/i.test(v.lang));
+    if (v) u.voice = v;
+    u.rate = slow ? 0.55 : 0.92;
+    speechSynthesis.speak(u);
+  } catch {}
+}
+const listenBtns = text => HAS_TTS ? `<button class="btn small" data-act="speak" data-text="${esc(text)}">▶ Listen</button><button class="btn small" data-act="speak-slow" data-text="${esc(text)}">Slow</button>` : "";
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+const HAS_SR = !!SR;
+let recog = null;
+function runCheck(h, heard){
+  S.speak.heard = heard; S.speak.target = h; S.speak.advice = "";
+  S.speak.result = score(h, heard);
+  if (hanziOf(heard).length) bump("speaking", 1);
+  render();
+}
+function startMic(h){
+  if (recog) { try { recog.stop(); } catch {} return; }
+  const r = new SR();
+  r.lang = S.profile && S.profile.script === "traditional" ? "zh-TW" : "zh-CN";
+  r.interimResults = true; r.maxAlternatives = 1; r.continuous = false;
+  let finalText = "";
+  r.onresult = ev => {
+    let interim = ""; finalText = "";
+    for (const res of ev.results) (res.isFinal ? (finalText += res[0].transcript) : (interim += res[0].transcript));
+    const d = $("#dict"); if (d) d.value = finalText + interim; S.speak.heard = finalText + interim;
+  };
+  r.onerror = ev => {
+    const m = ev.error === "not-allowed" || ev.error === "service-not-allowed" ? "Microphone access was blocked. Allow it in your browser's site settings, or use your keyboard's microphone instead."
+      : ev.error === "no-speech" ? "No speech heard. Tap 🎙 Speak and try again, a little closer to the mic."
+      : ev.error === "network" ? "Speech recognition needs an internet connection." : "";
+    if (m) setStatus(m);
+  };
+  r.onend = () => { recog = null; S.listening = false; const heard = S.speak.heard || ""; if (hanziOf(heard).length) runCheck(h, heard); else render(); };
+  recog = r; S.listening = true; S.speak.result = null; S.speak.heard = ""; setStatus(""); render();
+  try { r.start(); } catch { recog = null; S.listening = false; render(); }
+}
+const checkBtn = (h, p, e) => `<button class="btn small red" data-act="check" data-h="${esc(h)}" data-p="${esc(p||"")}" data-e="${esc(e||"")}">🎙 Check me</button>`;
+
+/* ---------- pronunciation scoring ---------- */
+const isHanzi = c => /[㐀-鿿豈-﫿]/.test(c);
+const hanziOf = s => [...str(s)].filter(isHanzi);
+function pyArr(chars){
+  if (!chars.length) return [];
+  try { if (window.pinyinPro) return window.pinyinPro.pinyin(chars.join(""), {type:"array", toneSandhi:false}); } catch {}
+  return chars.map(() => "");
+}
+const toneless = p => str(p).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+const TONE_SHAPE = {1:"1st tone: high and level, like holding a note",2:"2nd tone: rising, like asking “huh?”",3:"3rd tone: low and dipping; in fast speech often just low",4:"4th tone: sharp fall from high to low, like a firm “No!”",5:"neutral tone: short and light"};
+function initialTip(p){
+  const s = toneless(p);
+  if (/^(zh|ch|sh|r)/.test(s)) return `${p}: retroflex. Curl the tongue tip up towards the ridge behind your top teeth without touching it; lips relaxed.`;
+  if (/^[jqx]/.test(s)) return `${p}: palatal. Tongue tip down behind the lower teeth, middle of the tongue arched up, lips spread in a smile.`;
+  if (/^[zcs]/.test(s)) return `${p}: tongue tip flat behind the lower front teeth; c is z with a strong puff of air, like the “ts” in “cats”.`;
+  if (/^[ptk]/.test(s)) return `${p}: aspirated. A strong puff of air; a tissue in front of your mouth should move.`;
+  if (/^[bdg]/.test(s)) return `${p}: unaspirated. No puff of air, closer to the p/t/k in “spy”, “sty”, “sky”.`;
+  if (/^h/.test(s)) return `${p}: h comes from the back of the throat with friction, like Scottish “loch”.`;
+  if (/ng$/.test(s)) return `${p}: -ng. Back of the tongue up to the soft palate; mouth stays open at the end.`;
+  if (/n$/.test(s)) return `${p}: -n. Tongue tip touches the ridge behind the top teeth at the end.`;
+  return null;
+}
+function score(target, heard){
+  const t = hanziOf(target), h = hanziOf(heard), n = t.length, m = h.length;
+  const tp = pyArr(t), hp = pyArr(h);
+  const d = Array.from({length:n+1}, (_, i) => Array.from({length:m+1}, (_, j) => i === 0 ? j : j === 0 ? i : 0));
+  for (let i = 1; i <= n; i++) for (let j = 1; j <= m; j++)
+    d[i][j] = Math.min(d[i-1][j-1] + (t[i-1] === h[j-1] ? 0 : 1), d[i-1][j] + 1, d[i][j-1] + 1);
+  const al = []; let i = n, j = m, extra = 0;
+  while (i > 0 || j > 0) {
+    if (i > 0 && j > 0 && d[i][j] === d[i-1][j-1] + (t[i-1] === h[j-1] ? 0 : 1)) { al.push([i-1, j-1]); i--; j--; }
+    else if (i > 0 && d[i][j] === d[i-1][j] + 1) { al.push([i-1, null]); i--; }
+    else { extra++; j--; }
+  }
+  al.reverse();
+  let pts = 0;
+  const chars = al.map(([ti, hi]) => {
+    const tpy = tp[ti] || "";
+    if (hi == null) return {t:t[ti], tp:tpy, kind:"missing"};
+    const hpy = hp[hi] || "";
+    let kind;
+    if (h[hi] === t[ti] || (hpy && hpy === tpy)) { kind = "correct"; pts += 1; }
+    else if (hpy && toneless(hpy) === toneless(tpy)) { kind = "tone"; pts += .5; }
+    else kind = "sound";
+    return {t:t[ti], tp:tpy, h:h[hi], hp:hpy, kind};
+  });
+  const acc = n ? Math.max(0, (pts - .25 * extra) / n) : 0;
+  const tips = [];
+  for (const v of chars) {
+    if (tips.length >= 6) break;
+    if (v.kind === "tone") tips.push(`${v.t} ${v.tp} came out as ${v.h} ${v.hp}. Aim for the ${TONE_SHAPE[toneOf(v.tp)]}.`);
+    else if (v.kind === "sound") { tips.push(`${v.t} ${v.tp} was heard as ${v.h} ${v.hp}.`); const tip = initialTip(v.tp); if (tip) tips.push(tip); }
+    else if (v.kind === "missing") tips.push(`${v.t} ${v.tp} wasn't heard. Say every syllable fully.`);
+  }
+  const verdict = m === 0 ? "No Chinese came through. Switch your keyboard to Chinese, tap its microphone and try again."
+    : acc >= .9 ? "Clear. A native speaker would understand you."
+    : acc >= .6 ? "Mostly clear. Work on the highlighted characters."
+    : "Not clear yet. Listen at slow speed, then try again.";
+  return {chars, acc, pct:Math.round(acc * 100), heard:h.join(""), heardPy:hp.join(" "), verdict, tips};
+}
+
+/* ---------- prompts ---------- */
+const COACH = `You are an elite Mandarin Chinese language coach and linguist. You teach with the Pareto principle (the core 1,000 highest-frequency words, plus personal vocabulary from the learner's life), Pleco-style character deconstruction (semantic radical, phonetic component, stroke-order logic, word families), Anki spaced repetition, comprehensible input with shadowing, and active mobilisation (5 structurally different sentences per word). Be a proactive, perceptive teacher: diagnose English-syntax interference and explain the Chinese logic, give memory hooks and etymology, contrast textbook and everyday native speech, contrast easily confused words and particles (了/过, 二/两, 的/得/地, 会/能/可以) as they come up, and give exact tongue-placement and mouth-shape tips for tricky sounds. Pinyin always uses tone marks, never numbers. Etymology must be accurate; if a component has no real sound role, say so rather than inventing one.`;
+function learnerBlock(){
+  const p = S.profile || {};
+  const script = p.script === "traditional" ? "Traditional" : "Simplified";
+  return `Learner profile:
+- Script: ${script} characters (write ALL Chinese in ${script})
+- Level: ${LEVELS[p.level] || "Complete beginner"}
+- Personal topics and routines: ${str(p.topics) || "(not given)"}
+- Words already learned (${S.words.length}): ${S.words.map(w => w.hanzi).join("、") || "(none yet)"}`;
+}
+function lessonPrompt(n, count, cls){
+  return `${COACH}
+
+${learnerBlock()}
+
+Write lesson ${n}. Choose exactly ${count} NEW words that are not in the learned list. Take them from the top 1,000 highest-frequency Mandarin words in a sensible learning order for this level; where it fits naturally, make one word personal vocabulary tied to the learner's topics and set "personal": true for it. Favour words that work together in one small scene.${cls ? `
+
+This lesson is a class in the learner's structured course. Theme: ${cls.focus}. Choose words that serve this theme first${cls.hsk ? ` and stay within HSK level ${cls.hsk} vocabulary where possible` : ""}; personal vocabulary is still welcome if it fits the theme.` : ""}
+
+For the graded micro-story, use the new words plus previously learned and very common words, at this learner's level (beginners: 5-8 short sentences). "segmented" puts a space between every word and punctuation mark. "shadowing" is the characters with / at short pauses and // at sentence ends. "stress" says where natives place stress and any tone sandhi in the story.
+
+The clinic is one insight that unlocks these words: a grammar pattern, a common English-speaker trap, or a register/cultural note. Give 1-3 wrong/right example pairs and a note on how natives actually say it.
+
+Reply with only one JSON object in exactly this shape (no markdown):
+{"words":[{"hanzi":"","pinyin":"","meaning":"","literal":"how the characters combine","personal":false,
+ "characters":[{"char":"","pinyin":"","meaning":"","radical":"semantic radical and what it hints","phonetic":"phonetic component and its sound, or 'none' with the real story","stroke":"stroke-order or balance tip for handwriting"}],
+ "family":[{"hanzi":"","pinyin":"","meaning":""}],
+ "anki":{"sentence":"","pinyin":"","english":"","image":"concrete image search idea"},
+ "pronunciation":"tone sandhi, retroflex or palatal notes and a physical tongue/mouth tip"}],
+ "story":{"hanzi":"","segmented":"","pinyin":"","english":"","shadowing":"","stress":""},
+ "clinic":{"title":"","body":"","examples":[{"wrong":"","right":"","why":""}],"nativeNote":""}}
+Every word gets one "characters" entry per character and 2-3 "family" words.`;
+}
+function feedbackPrompt(lesson, drafts){
+  const lines = [];
+  arr(lesson.words).forEach((w, wi) => {
+    lines.push(`Word ${w.hanzi} (${w.pinyin}, ${w.meaning}):`);
+    SLOT_LABELS.forEach((lab, k) => lines.push(`  ref w${wi}s${k} [${lab}]: ${str((drafts[wi]||[])[k]).trim()}`));
+  });
+  return `${COACH}
+
+${learnerBlock()}
+
+The learner finished the 5-sentence challenge for lesson words ${arr(lesson.words).map(w=>w.hanzi).join("、")}. Their sentences:
+${lines.join("\n")}
+
+Evaluate each sentence as an expert teacher doing "Native Partner Polish". For each, judge two levels separately: grammatical (is it correct Mandarin?) and natural (is this how a native would actually say it?). Explain briefly WHY anything sounds unnatural, naming English interference where it applies. Give the natural version a native would say (characters and pinyin). If a sentence is blank or not Chinese, say so kindly and give a model sentence. Be encouraging and specific, not gushing.
+
+Then: list 1-3 patterns you see across their mistakes (empty if none); write one polished, natural daily message (2-4 sentences) built from their best ideas that they can send as a text and record as a voice note to a native language partner; and suggest one natural follow-up question for the partner using today's words.
+
+Reply with only one JSON object (no markdown):
+{"sentences":[{"ref":"w0s0","grammatical":true,"natural":false,"comment":"","natural_hanzi":"","natural_pinyin":"","english":""}],
+ "patterns":[""],
+ "partner":{"hanzi":"","pinyin":"","english":""},
+ "followUp":{"hanzi":"","pinyin":"","english":""},
+ "encouragement":""}
+Include one "sentences" entry for every ref, in order.`;
+}
+
+/* ---------- course views ---------- */
+const doneSet = () => new Set(Object.keys(S.progress).filter(k => S.progress[k] && S.progress[k].done));
+const nextClass = () => { const d = doneSet(); return ALL_CLASSES.find(c => !d.has(c.id)); };
+function renderCourse(){
+  if (S.openClass) return renderClass(ALL_CLASSES.find(c => c.id === S.openClass));
+  const d = doneSet(), total = ALL_CLASSES.length, nx = nextClass();
+  const cards = COURSE.map(m => { const n = m.classes.filter(c => d.has(c.id)).length; return `
+    <button class="modcard" data-act="jump" data-m="${m.id}"><span class="modnum">${m.id}</span>
+      <span><span class="t">${esc(m.title)}</span><br><span class="s">${esc(m.subtitle)}</span></span>
+      <span class="c${n === m.classes.length ? " done" : ""}">${n}/${m.classes.length}</span></button>`; }).join("");
+  const mods = COURSE.map(m => { const n = m.classes.filter(c => d.has(c.id)).length; return `
+    <section class="module" id="module-${m.id}">
+      <div class="module-h"><div><div class="label">Module ${m.id}</div><h3>${esc(m.title)}</h3><p class="muted small">${esc(m.subtitle)}</p></div>
+        <span class="mono small ${n === m.classes.length ? "" : "muted"}" style="${n === m.classes.length ? "color:var(--ok)" : ""}">${n}/${m.classes.length}</span></div>
+      <div class="classlist">${m.classes.map(c => `
+        <button class="classrow" data-act="open-class" data-id="${c.id}">
+          <span class="tick${d.has(c.id) ? " done" : ""}" aria-label="${d.has(c.id) ? "Done" : "Not done"}"></span>
+          <span style="min-width:0"><span class="ct">${c.id}&nbsp; ${esc(c.title)}</span><br><span class="cs">${esc(c.summary)}</span></span>
+          <span class="meta"><span class="kb k-${c.kind}">${KIND[c.kind]}</span>${c.minutes}m</span>
+        </button>`).join("")}</div>
+    </section>`; }).join("");
+  return `<section style="display:flex;flex-direction:column;gap:22px">
+    <div class="course-head">
+      <div class="label">Your course</div>
+      <h2>Six modules, ${total} classes</h2>
+      <div class="track"><i style="width:${(d.size/total*100).toFixed(1)}%"></i></div>
+      <p class="muted small">${d.size} of ${total} classes complete</p>
+      ${nx ? `<button class="next" data-act="open-class" data-id="${nx.id}"><span><span class="label">${d.size ? "Continue" : "Start here"}</span><b>${nx.id}&nbsp; ${esc(nx.title)}</b></span><span aria-hidden="true">→</span></button>`
+        : `<p class="notice">Course complete. Repeat the capstone every few months to measure progress.</p>`}
+    </div>
+    <div><div class="label" style="margin-bottom:8px">The six modules</div><div class="mods">${cards}</div></div>
+    ${mods}
+  </section>`;
+}
+function renderClass(c){
+  if (!c) { S.openClass = null; return renderCourse(); }
+  const m = COURSE.find(x => x.id === c.module), pr = S.progress[c.id] || {}, tasks = new Set(arr(pr.tasks));
+  const idx = ALL_CLASSES.findIndex(x => x.id === c.id), nxt = ALL_CLASSES[idx + 1];
+  const practice = c.practice && c.practice.length ? `<div class="panel"><h3 style="font-size:16px">Say it</h3>
+    <p class="muted small">Listen, then tap Check me to say it and see which syllables and tones came through.</p>
+    ${c.practice.map(p => `<div class="phrase"><div><div class="h">${esc(p.h)}</div><div class="mono muted small">${esc(p.p)}</div><div class="small">${esc(p.e)}</div></div>
+      <div class="row">${listenBtns(p.h)}${checkBtn(p.h, p.p, p.e)}</div></div>`).join("")}</div>` : "";
+  let ai = "";
+  if (c.kind === "aiLesson") {
+    const cur = S.current;
+    let inner;
+    if (pr.done) inner = `<p style="color:var(--ok)">Lesson finished. Its words are in your deck.</p>`;
+    else if (cur && cur.classId === c.id) inner = `<p>Your lesson for this class is in progress.</p><div class="row"><button class="btn primary" data-act="goto" data-v="lesson">Continue lesson ${cur.number}</button></div>`;
+    else if (cur) inner = `<p class="muted">Finish lesson ${cur.number} first, so your deck stays in order.</p><div class="row"><button class="btn" data-act="goto" data-v="lesson">Go to lesson ${cur.number}</button></div>`;
+    else if (!S.profile) inner = `<p class="muted">Answer the three questions on the Lesson tab first, so the coach can fit the lesson to you.</p><div class="row"><button class="btn" data-act="goto" data-v="lesson">Answer the questions</button></div>`;
+    else if (!AI.key()) inner = `<p class="muted">Your coach writes a full five-step lesson for this class: ${esc(c.focus)}.</p><p class="notice">${NO_KEY}</p><div class="row"><button class="btn" data-act="goto" data-v="profile">Add a key</button><button class="btn" data-act="done" data-id="${c.id}">Skip and mark done</button></div>`;
+    else inner = `<p class="muted">Your coach writes a full five-step lesson for this class: ${esc(c.focus)}.</p>
+      <div class="row"><label class="label" for="wc">Words</label><select id="wc" class="btn small">${[3,4,5].map(k => `<option ${k===4?"selected":""}>${k}</option>`).join("")}</select>
+      <button class="btn primary" data-act="gen" data-class="${c.id}" ${S.busy ? "disabled" : ""}>${S.busy === "lesson" ? '<span class="spin"></span> Writing lesson…' : "Write my lesson"}</button>
+      ${S.busy === "lesson" ? '<button class="btn" data-act="stop">Stop</button>' : ""}</div>
+      <p class="muted small" id="gen-progress"></p><p class="err">${esc(S.lastError)}</p>`;
+    ai = `<div class="panel ai-box"><h3 style="font-size:16px">Your lesson</h3>${inner}<p class="muted small">The class completes when you finish the lesson's 5-sentence challenge.</p></div>`;
+  }
+  const LINK = {goals:["goals","Open Goals & Tracker"],deck:["deck","Open Deck & Anki"],reader:["lesson","Open the lesson story"],drill:["speak","Open the Speak tab"],coach:["coach","Ask the coach"],profile:["profile","Open your profile"]};
+  const link = c.opens && LINK[c.opens] ? `<div class="row"><button class="btn" data-act="goto" data-v="${LINK[c.opens][0]}">${LINK[c.opens][1]}</button></div>` : "";
+  const taskHtml = c.tasks.length ? `<div class="panel"><h3 style="font-size:16px">Action steps</h3>
+    ${c.tasks.map((t, i) => `<label class="task${tasks.has(i) ? " done" : ""}"><input type="checkbox" id="task-${c.id}-${i}" data-act="task" data-id="${c.id}" data-i="${i}" ${tasks.has(i) ? "checked" : ""}><span>${esc(t)}</span></label>`).join("")}</div>` : "";
+  return `<section class="cls" style="display:flex;flex-direction:column;gap:18px">
+    <button class="back" data-act="close-class">← All classes</button>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="label">Module ${m.id} · ${esc(m.title)}</div>
+      <h2>${c.id}&nbsp; ${esc(c.title)}</h2>
+      <div class="row small"><span class="kb k-${c.kind}">${KIND[c.kind]}</span><span class="mono muted">${c.minutes} min</span>${c.hsk ? `<span class="mono muted">HSK ${c.hsk}</span>` : ""}${pr.done ? `<span style="color:var(--ok)">✓ Completed</span>` : ""}</div>
+      <p class="lead">${esc(c.summary)}</p>
+    </div>
+    <div class="panel"><h3 style="font-size:16px">Key points</h3><ol class="points">${c.points.map(p => `<li>${esc(p)}</li>`).join("")}</ol></div>
+    ${practice}${ai}${link}${taskHtml}
+    <div class="row" style="justify-content:space-between">
+      ${pr.done ? `<button class="btn" data-act="undone" data-id="${c.id}">Mark as not done</button>` : `<button class="btn primary" data-act="done" data-id="${c.id}">✓ Complete class</button>`}
+      ${nxt ? `<button class="btn" data-act="open-class" data-id="${nxt.id}">Next: ${nxt.id} ${esc(nxt.title)} →</button>` : ""}
+    </div>
+  </section>`;
+}
+function setDone(id, v){
+  const pr = S.progress[id] = S.progress[id] || {};
+  if (!!pr.done === v) return;
+  pr.done = v; pr.at = v ? Date.now() : null;
+  if (v) bump("classes", 1);
+  persist(s => s.saveProgress(S.progress));
+}
+
+/* ---------- goals ---------- */
+function streak(){
+  const studied = k => { const d = S.days[k]; return d && (d.minutes || d.newCards || d.speaking || d.classes || d.conversations); };
+  let n = 0; const d = new Date();
+  if (!studied(dayKey(d))) d.setDate(d.getDate() - 1);
+  while (studied(dayKey(d))) { n++; d.setDate(d.getDate() - 1); }
+  return n;
+}
+function renderGoals(){
+  if (!S.profile) return `<div class="panel"><p>Answer the three questions on the Lesson tab first. Your goals and tracker appear here after that.</p><div class="row"><button class="btn primary" data-act="goto" data-v="lesson">Get started</button></div></div>`;
+  const p = S.profile, t = today(), d = doneSet();
+  const week = [...Array(7)].map((_, i) => { const x = new Date(); x.setDate(x.getDate() - (6 - i)); const k = dayKey(x); return {k, l:x.toLocaleDateString(undefined,{weekday:"short"}), m:(S.days[k]||{}).minutes||0, c:(S.days[k]||{}).conversations||0}; });
+  const maxM = Math.max(p.dailyMinutes || 20, ...week.map(w => w.m), 1);
+  const convWeek = week.reduce((a, w) => a + w.c, 0);
+  const goalForm = `<form class="panel" id="goals-form">
+      <h3 style="font-size:16px">Your map</h3>
+      <div class="field"><label class="label" for="g-why">Motivation: why are you learning?</label><textarea id="g-why" rows="2" placeholder="e.g. chat with family, travel, pass HSK 4">${esc(p.motivation)}</textarea></div>
+      <div class="field"><label class="label" for="g-skills">Skills in priority order</label><input id="g-skills" value="${esc(p.skills)}" placeholder="e.g. speaking, listening, reading, typing; handwriting later"></div>
+      <div class="row"><div class="field" style="flex:1;min-width:140px"><label class="label" for="g-hsk">Target HSK level</label><select id="g-hsk">${[1,2,3,4,5,6].map(n => `<option ${n === (p.targetHSK||3) ? "selected" : ""}>${n}</option>`).join("")}</select></div>
+        <div class="field" style="flex:1;min-width:160px"><label class="label" for="g-date">By</label><input id="g-date" type="date" value="${esc(p.targetDate || "")}"></div></div>
+      <div class="field"><label class="label" for="g-miles">Milestones (one per line)</label><textarea id="g-miles" rows="3">${esc(p.milestones)}</textarea></div>
+      <div class="row"><div class="field" style="flex:1;min-width:120px"><label class="label" for="g-min">Daily minutes</label><input id="g-min" type="number" min="5" max="180" step="5" value="${p.dailyMinutes||20}"></div>
+        <div class="field" style="flex:1;min-width:120px"><label class="label" for="g-cards">New cards a day</label><input id="g-cards" type="number" min="1" max="40" value="${p.dailyCards||10}"></div>
+        <div class="field" style="flex:1;min-width:120px"><label class="label" for="g-conv">Conversations a week</label><input id="g-conv" type="number" min="0" max="14" value="${p.weeklyConv ?? 1}"></div></div>
+      <div class="field"><label class="label" for="g-minday">Minimum viable day</label><input id="g-minday" value="${esc(p.minimumDay || "5 minutes of Anki reviews")}"></div>
+      <div class="row"><button class="btn primary" type="submit">Save goals</button><button class="btn" type="button" data-act="goals-cancel">Cancel</button></div>
+    </form>`;
+  const goalView = `<div class="panel"><div class="row" style="justify-content:space-between"><h3 style="font-size:16px">Your map</h3><button class="btn small" data-act="goals-edit">Edit goals</button></div>
+      <dl class="kv"><dt>Target</dt><dd>HSK ${p.targetHSK||3}${p.targetDate ? " by " + esc(new Date(p.targetDate + "T12:00").toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"})) : ""}</dd>
+        <dt>Skills</dt><dd>${esc(p.skills) || '<span class="muted">Not set</span>'}</dd>
+        <dt>Daily plan</dt><dd>${p.dailyMinutes||20} min · ${p.dailyCards||10} new cards · ${p.weeklyConv ?? 1} conversation(s) a week</dd>
+        <dt>Busy days</dt><dd>${esc(p.minimumDay || "5 minutes of Anki reviews")}</dd></dl>
+      ${p.milestones ? `<div><div class="label">Milestones</div><ul class="plain">${str(p.milestones).split("\n").filter(Boolean).map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
+      ${p.motivation ? "" : `<p class="muted small">Tap Edit goals to write your motivation, vision and plan (course module 2).</p>`}</div>`;
+  return `<section style="display:flex;flex-direction:column;gap:18px">
+    ${p.motivation ? `<div><div class="label">Your why</div><p class="hz" style="font-size:19px">${esc(p.motivation)}</p></div>` : ""}
+    <div class="stats">
+      <div class="stat"><span class="label">Streak</span><b style="color:var(--warn)">${streak()}</b><span class="muted small">days</span></div>
+      <div class="stat"><span class="label">Today</span><b style="color:var(--ok)">${t.minutes||0}</b><span class="muted small">of ${p.dailyMinutes||20} min</span></div>
+      <div class="stat"><span class="label">Words</span><b style="color:var(--info)">${S.words.length}</b><span class="muted small">of 1,000 core</span></div>
+      <div class="stat"><span class="label">Classes</span><b style="color:var(--violet)">${d.size}</b><span class="muted small">of ${ALL_CLASSES.length}</span></div>
+    </div>
+    <div class="panel">
+      <h3 style="font-size:16px">Log today</h3>
+      <div class="row">${[5,10,20].map(n => `<button class="btn" data-act="log" data-n="${n}">+${n} min</button>`).join("")}<button class="btn" data-act="conv">Had a conversation</button>${(t.minutes||0) > 0 ? `<button class="btn small" data-act="log" data-n="-5">Undo 5 min</button>` : ""}</div>
+      <dl class="kv"><dt>Minutes</dt><dd class="mono">${t.minutes||0} / ${p.dailyMinutes||20}${(t.minutes||0) >= (p.dailyMinutes||20) ? " ✓" : ""}</dd>
+        <dt>New cards</dt><dd class="mono">${t.newCards||0} / ${p.dailyCards||10}${(t.newCards||0) >= (p.dailyCards||10) ? " ✓" : ""}</dd>
+        <dt>Speaking checks</dt><dd class="mono">${t.speaking||0}</dd>
+        <dt>Conversations this week</dt><dd class="mono">${convWeek} / ${p.weeklyConv ?? 1}</dd></dl>
+      <p class="muted small">New cards and speaking checks count automatically. Add minutes for anything you do outside the app too: Anki, podcasts, a tutor.</p>
+    </div>
+    <div class="panel">
+      <h3 style="font-size:16px">Last 7 days</h3>
+      <div class="bars">${week.map(w => `<div class="bar"><span>${w.m}</span><i class="${w.m >= (p.dailyMinutes||20) ? "met" : ""}" style="height:${Math.max(3, w.m / maxM * 110)}px"></i><span>${esc(w.l)}</span></div>`).join("")}</div>
+      <p class="muted small">Target ${p.dailyMinutes||20} min a day · ${week.reduce((a, w) => a + w.m, 0)} min this week</p>
+    </div>
+    ${S.editGoals ? goalForm : goalView}
+  </section>`;
+}
+
+/* ---------- lesson pieces ---------- */
+function tilesFor(w){
+  const chars = arr(w.characters);
+  return [...str(w.hanzi)].map((g, i) => {
+    const c = chars.find(c => c.char === g) || chars[i] || {};
+    const t = toneOf(c.pinyin);
+    return `<div class="tile"><div class="sq hz t${t}" aria-hidden="true">${esc(g)}</div><span class="py t${t}">${esc(c.pinyin || "")}</span></div>`;
+  }).join("");
+}
+const dictLinks = h => { const q = encodeURIComponent(h); return `<a class="btn small" href="plecoapi://x-callback-url/s?q=${q}" title="Opens Pleco if it is installed">Pleco</a><a class="btn small" href="https://www.mdbg.net/chinese/dictionary?page=worddict&wdqb=${q}" target="_blank" rel="noopener">MDBG</a>`; };
+function wordCard(w){
+  const chars = arr(w.characters).map(c => `
+    <div class="ch"><span class="big hz t${toneOf(c.pinyin)}">${esc(c.char)}</span>
+      <dl><dt>Means</dt><dd><span class="mono">${esc(c.pinyin)}</span> · ${esc(c.meaning)}</dd><dt>Radical</dt><dd>${esc(c.radical)}</dd><dt>Sound</dt><dd>${esc(c.phonetic)}</dd><dt>Write</dt><dd>${esc(c.stroke)}</dd></dl></div>`).join("");
+  const fam = arr(w.family).map(f => `<span class="chip"><span class="hz">${esc(f.hanzi)}</span><span class="mono">${esc(f.pinyin)}</span><span class="muted">${esc(f.meaning)}</span></span>`).join("");
+  return `<article class="word">
+    <div class="tiles" aria-label="${esc(w.hanzi)}">${tilesFor(w)}</div>
+    <div class="word-main">
+      <div class="row"><span class="pyw">${esc(w.pinyin)}</span>${w.personal ? '<span class="personal">Your vocab</span>' : ""}</div>
+      <div class="gloss">${esc(w.meaning)}</div>
+      <div class="literal">${esc(w.literal)}</div>
+      <div class="row">${listenBtns(w.hanzi)}${checkBtn(w.hanzi, w.pinyin, w.meaning)}${dictLinks(w.hanzi)}</div>
+    </div>
+    <div class="chars">${chars}</div>
+    <div class="family"><span class="label">Word family</span>${fam}</div>
+  </article>`;
+}
+function ankiCard(w){
+  const a = w.anki || {};
+  return `<div class="anki"><div class="front hz">${esc(w.hanzi)}</div>
+    <div class="back">
+      <div><span class="mono">${esc(w.pinyin)}</span> · ${esc(w.meaning)}</div>
+      <div class="muted">${esc(arr(w.characters).map(c => `${c.char}: ${c.radical}`).join(" · "))}</div>
+      <div><div class="s">${esc(a.sentence)}</div><div class="mono muted">${esc(a.pinyin)}</div><div>${esc(a.english)}</div></div>
+      <div class="row">${listenBtns(a.sentence)}${checkBtn(a.sentence, a.pinyin, a.english)}</div>
+      <div><span class="label">Image to find</span><br>${esc(a.image)}</div>
+      <div class="coach"><span class="label">Pronunciation</span><br>${esc(w.pronunciation)}</div>
+    </div></div>`;
+}
+function markTargets(text, words){
+  let h = esc(text);
+  arr(words).map(w => esc(w.hanzi)).filter(Boolean).sort((a,b) => b.length - a.length).forEach(t => { h = h.split(t).join(`\u0001${t}\u0002`); });
+  return h.replace(/\u0001/g, "<mark>").replace(/\u0002/g, "</mark>");
+}
+function readerBlock(lesson){
+  const s = lesson.story || {}, r = S.reader;
+  const shadow = esc(s.shadowing).replace(/\/\//g, '<span class="p">‖</span>').replace(/\//g, '<span class="p">/</span>');
+  const tog = (k, lab) => `<button class="tog" data-act="tog" data-k="${k}" aria-pressed="${r[k]}">${lab}</button>`;
+  return `<div class="reader">
+    <div class="toggles">${tog("seg","Word spacing")}${tog("py","Pinyin")}${tog("en","English")}${tog("shadow","Shadowing guide")}</div>
+    <p class="story${r.seg ? " segmented" : ""}">${markTargets(r.seg ? s.segmented : s.hanzi, lesson.words)}</p>
+    ${r.py ? `<p class="line-py">${esc(s.pinyin)}</p>` : ""}
+    ${r.en ? `<p>${esc(s.english)}</p>` : ""}
+    ${r.shadow ? `<div class="coach"><p class="shadow">${shadow}</p><p>${esc(s.stress)}</p></div>` : ""}
+    <div class="row">${listenBtns(s.hanzi)}<button class="btn small" data-act="speak-story">Check sentence by sentence</button></div>
+    <p class="muted small">Read it once without help, then listen, then shadow aloud at the pause marks.</p>
+  </div>`;
+}
+function clinicBlock(c){
+  c = c || {};
+  const ex = arr(c.examples).map(e => `<div class="pair"><div class="w"><span class="label">Avoid</span><span class="hz">${esc(e.wrong)}</span></div><div class="r"><span class="label">Say</span><span class="hz">${esc(e.right)}</span></div><p class="why">${esc(e.why)}</p></div>`).join("");
+  return `<div class="panel clinic"><h4>${esc(c.title)}</h4><p>${esc(c.body)}</p>${ex}${c.nativeNote ? `<p class="notice"><strong>How natives say it:</strong> ${esc(c.nativeNote)}</p>` : ""}</div>`;
+}
+function challengeBlock(lesson, ctx){
+  const drafts = ctx.drafts || {};
+  const items = arr(lesson.words).map((w, wi) => `
+    <div class="chal-word"><h4><span class="hz">${esc(w.hanzi)}</span><span class="mono muted">${esc(w.pinyin)}</span><span class="muted">${esc(w.meaning)}</span></h4>
+      ${SLOT_LABELS.map((lab, k) => `<div class="slot"><label for="s-${wi}-${k}">${lab}</label><textarea class="ans" id="s-${wi}-${k}" rows="1" lang="zh" data-wi="${wi}" data-k="${k}" placeholder="${k===0?"用"+esc(w.hanzi)+"写一个句子…":""}">${esc((drafts[wi]||[])[k])}</textarea></div>`).join("")}
+    </div>`).join("");
+  return `<div class="chal">
+    <p class="muted">Write five structurally different sentences for each word. Think in Chinese: reuse sentence frames you already know and swap the new word in. The next lesson unlocks once these are polished.</p>
+    ${items}
+    <div class="row"><button class="btn primary" data-act="submit-chal" ${S.busy ? "disabled" : ""}>${S.busy === "feedback" ? '<span class="spin"></span> Polishing…' : "Get native partner polish"}</button>
+      ${S.busy === "feedback" ? '<button class="btn" data-act="stop">Stop</button>' : ""}<span class="err">${esc(S.lastError)}</span></div>
+    ${ctx.feedback ? feedbackBlock(lesson, ctx) : ""}
+  </div>`;
+}
+function feedbackBlock(lesson, ctx){
+  const fb = ctx.feedback, drafts = ctx.drafts || {}, byRef = {};
+  arr(fb.sentences).forEach(s => byRef[s.ref] = s);
+  const items = [];
+  arr(lesson.words).forEach((w, wi) => SLOT_LABELS.forEach((lab, k) => {
+    const s = byRef[`w${wi}s${k}`]; if (!s) return;
+    const g = s.grammatical, n = s.natural;
+    items.push(`<div class="fb-item"><span class="label">${esc(w.hanzi)} · ${lab}</span>
+      <div class="orig">${esc((drafts[wi]||[])[k]) || '<span class="muted">(blank)</span>'}</div>
+      <div class="badges"><span class="badge ${g ? "ok" : "no"}">${g ? "Grammatically correct" : "Grammar fix needed"}</span><span class="badge ${n ? "ok" : (g ? "meh" : "no")}">${n ? "Sounds native" : "Not how natives say it"}</span></div>
+      ${s.comment ? `<p>${esc(s.comment)}</p>` : ""}
+      ${s.natural_hanzi ? `<div class="natural"><span class="hz">${esc(s.natural_hanzi)}</span> <span class="mono muted">${esc(s.natural_pinyin)}</span><br><span>${esc(s.english)}</span></div>` : ""}</div>`);
+  }));
+  const p = fb.partner || {}, f = fb.followUp || {};
+  return `<div class="fb panel"><h4>Native partner polish</h4>
+    ${fb.encouragement ? `<p>${esc(fb.encouragement)}</p>` : ""}
+    ${arr(fb.patterns).filter(Boolean).length ? `<div class="notice"><strong>Patterns to watch</strong><ul class="plain">${arr(fb.patterns).filter(Boolean).map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
+    ${items.join("")}
+    <div class="partner"><span class="label">Send to your language partner today</span>
+      <p class="hz">${esc(p.hanzi)}</p><p class="mono muted">${esc(p.pinyin)}</p><p>${esc(p.english)}</p>
+      <div class="row">${listenBtns(p.hanzi)}${checkBtn(p.hanzi, p.pinyin, p.english)}<button class="btn small" data-act="copy" data-text="${esc(p.hanzi)}">Copy message</button></div>
+      <span class="label" style="margin-top:6px">Then ask them</span>
+      <p class="hz" style="font-size:18px">${esc(f.hanzi)}</p><p class="mono muted">${esc(f.pinyin)}</p><p>${esc(f.english)}</p>
+      <div class="row"><button class="btn small" data-act="copy" data-text="${esc(f.hanzi)}">Copy question</button></div>
+      <p class="muted small">Ask them to correct your text and reply with a voice note. Replay it and shadow it until your rhythm matches.</p>
+    </div>
+    ${ctx.isSample ? `<p class="notice">This was the sample lesson. Answer the three questions above to get lessons built for you.</p>`
+      : `<div class="row"><button class="btn primary" data-act="finish" ${S.busy ? "disabled" : ""}>Finish lesson and add ${arr(lesson.words).length} cards to my deck</button></div>`}
+  </div>`;
+}
+function lessonView(lesson, ctx){
+  const words = arr(lesson.words);
+  const cls = ctx.classId ? ALL_CLASSES.find(c => c.id === ctx.classId) : null;
+  return `<section class="lesson">
+    <div class="lesson-head">
+      <div><div class="label">${ctx.isSample ? "Sample lesson" : "Lesson " + ctx.number}${cls ? ` · Class ${cls.id} ${esc(cls.title)}` : ""}</div>
+      <h2 class="hz">${words.map(w => esc(w.hanzi)).join(" · ")}</h2></div>
+      ${ctx.isSample ? '<span class="sample-tag">Example content</span>' : `<button class="btn small" data-act="export-lesson">Export these ${words.length} cards</button>`}
+    </div>
+    <div class="step"><div class="step-h"><span class="n">STEP 1</span><h3>Take the characters apart</h3></div><div class="words">${words.map(wordCard).join("")}</div></div>
+    <div class="step"><div class="step-h"><span class="n">STEP 2</span><h3>Anki flashcard blueprint</h3></div>
+      <p class="muted">Record yourself saying each sentence in Anki and compare it with the audio. The cards join your deck when you finish step 5.</p>
+      <div class="cards">${words.map(ankiCard).join("")}</div></div>
+    <div class="step"><div class="step-h"><span class="n">STEP 3</span><h3>Graded micro-story</h3></div>${readerBlock(lesson)}</div>
+    <div class="step"><div class="step-h"><span class="n">STEP 4</span><h3>Teacher's clinic</h3></div>${clinicBlock(lesson.clinic)}</div>
+    <div class="step"><div class="step-h"><span class="n">STEP 5</span><h3>The 5-sentence challenge</h3></div>${challengeBlock(lesson, ctx)}</div>
+  </section>`;
+}
+
+/* ---------- views ---------- */
+function profileForm(p, isOnboarding){
+  p = p || {};
+  const radio = (name, val, lab) => `<label><input type="radio" name="${name}" value="${val}" ${p[name]===val?"checked":""}>${lab}</label>`;
+  return `<form class="panel" id="profile-form">
+    ${isOnboarding ? `<div><div class="label">你好 · Nǐ hǎo</div><h2 class="hz" style="font-size:22px;margin-top:4px">Three questions before Lesson 1</h2></div>
+      <p class="muted">I'm your coach. I'll teach the 1,000 words that cover most everyday Mandarin, and mix in words from your own life so you can talk about it from week one.</p>` : `<h2 style="font-size:18px">Your profile</h2>`}
+    <div class="field"><span class="label">1 · Which characters?</span><div class="seg">${radio("script","simplified","Simplified (mainland China, Singapore)")}${radio("script","traditional","Traditional (Taiwan, Hong Kong)")}</div></div>
+    <div class="field"><span class="label">2 · Your level</span><div class="seg">${radio("level","beginner","Complete beginner")}${radio("level","basics","Some basics")}${radio("level","intermediate","Intermediate")}</div></div>
+    <div class="field"><label class="label" for="topics">3 · Three to five topics or routines from your life</label>
+      <textarea id="topics" rows="2" placeholder="e.g. cooking dinner, school run, football, running in the park">${esc(p.topics)}</textarea></div>
+    <div class="row"><button class="btn primary" type="submit">${isOnboarding ? "Save and get Lesson 1 ready" : "Save profile"}</button><span class="err" id="pf-err"></span></div>
+  </form>`;
+}
+function startPanel(){
+  const n = (S.profile.lessonCount || 0) + 1;
+  const nx = nextClass();
+  return `<div class="panel">
+    <div class="row" style="justify-content:space-between"><div><div class="label">Free lesson</div><h2 style="font-size:20px">Lesson ${n}</h2></div>
+    <span class="muted">${S.profile.script === "traditional" ? "Traditional" : "Simplified"} · ${esc(LEVELS[S.profile.level] || "")}</span></div>
+    <p class="muted">Each lesson brings in a few high-frequency words, then walks through deconstruction, Anki cards, a short story, a clinic and your 5-sentence challenge.${nx ? ` Following the course? Your next class is <button class="back" data-act="open-class" data-id="${nx.id}">${nx.id} ${esc(nx.title)}</button>.` : ""}</p>
+    <div class="row">
+      <label class="label" for="wc">Words</label>
+      <select id="wc" class="btn small">${[3,4,5].map(k => `<option ${k===3?"selected":""}>${k}</option>`).join("")}</select>
+      <button class="btn primary" data-act="gen" ${S.busy ? "disabled" : ""}>${S.busy === "lesson" ? '<span class="spin"></span> Writing lesson…' : "Start lesson " + n}</button>
+      ${S.busy === "lesson" ? '<button class="btn" data-act="stop">Stop</button>' : ""}
+    </div>
+    ${AI.key() ? "" : `<p class="notice">${NO_KEY} <button class="back" data-act="goto" data-v="profile">Add a key</button></p>`}
+    <p class="muted small" id="gen-progress">${S.busy === "lesson" ? "This usually takes under a minute." : ""}</p>
+    <p class="err">${esc(S.lastError)}</p>
+  </div>`;
+}
+function renderLessonTab(){
+  if (!S.profile) return profileForm(null, true) + lessonView(SAMPLE, {isSample:true, drafts:S.sampleDrafts, feedback:S.sampleFeedback});
+  if (S.current && S.current.lesson) return lessonView(S.current.lesson, {isSample:false, number:S.current.number, classId:S.current.classId, drafts:S.current.drafts, feedback:S.current.feedback});
+  return startPanel() + (S.words.length ? "" : lessonView(SAMPLE, {isSample:true, drafts:S.sampleDrafts, feedback:S.sampleFeedback}));
+}
+
+/* speak tab */
+function splitSentences(t){ return (str(t).match(/[^。！？!?]+[。！？!?]?/g) || []).map(s => s.trim()).filter(s => hanziOf(s).length); }
+function speakItems(){
+  const L = (S.current && S.current.lesson) || (S.words.length ? null : SAMPLE);
+  const src = S.speak.source;
+  if (src === "lesson") return L ? arr(L.words).flatMap(w => [{h:w.hanzi,p:w.pinyin,e:w.meaning},{h:(w.anki||{}).sentence,p:(w.anki||{}).pinyin,e:(w.anki||{}).english}]).filter(x => x.h) : [];
+  if (src === "story") return L ? splitSentences((L.story||{}).hanzi).map(h => ({h})) : [];
+  if (src === "deck") return S.words.slice().reverse().flatMap(w => [{h:w.hanzi,p:w.pinyin,e:w.meaning}]);
+  if (src === "basics") return ALL_CLASSES.filter(c => c.module === 3).flatMap(c => arr(c.practice)).map(p => ({h:p.h.replace(/…/g,""),p:p.p,e:p.e}));
+  return [];
+}
+function renderSpeak(){
+  const items = S.speak.custom ? [S.speak.custom] : speakItems();
+  const i = Math.min(S.speak.idx, Math.max(0, items.length - 1));
+  const it = items[i];
+  const src = (k, l) => `<button class="tog" data-act="speak-src" data-k="${k}" aria-pressed="${!S.speak.custom && S.speak.source === k}">${l}</button>`;
+  const r = S.speak.result;
+  const result = r ? `<div class="panel" style="gap:12px">
+      <div class="score"><b style="color:${r.acc >= .9 ? "var(--ok)" : r.acc >= .6 ? "var(--warn)" : "var(--bad)"}">${r.pct}%</b><span>${esc(r.verdict)}</span></div>
+      <div class="rtiles">${r.chars.map(v => `<div class="rt v-${v.kind}"><span class="c hz">${esc(v.t)}</span><span class="mono">${esc(v.tp)}</span><span>${v.kind === "correct" ? "✓" : v.kind === "missing" ? "missed" : "heard " + esc(v.h)}</span></div>`).join("")}</div>
+      ${r.heard ? `<div><span class="label">What came through</span><p class="hz" style="font-size:20px">${esc(r.heard)}</p><p class="mono muted small">${esc(r.heardPy)}</p></div>` : ""}
+      ${r.tips.length ? `<ul class="plain">${r.tips.map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : ""}
+      <div class="legend"><span class="v-correct">Right</span><span class="v-tone">Tone off</span><span class="v-sound">Different sound</span><span class="v-missing">Not heard</span></div>
+      ${r.acc < 1 ? `<div class="row"><button class="btn small" data-act="coach-me" ${S.busy ? "disabled" : ""}>${S.busy === "advice" ? '<span class="spin"></span> Asking the coach…' : "Coach me on this"}</button></div>` : ""}
+      ${S.speak.advice ? `<div class="coach" style="white-space:pre-wrap">${fmtChat(S.speak.advice)}</div>` : ""}
+    </div>` : "";
+  return `<section style="display:flex;flex-direction:column;gap:16px">
+    <div class="panel" style="gap:10px">
+      <h2 style="font-size:18px">Check your pronunciation</h2>
+      <p class="muted small">Speech recognition turns what you say into characters. If what comes through matches the target, a Mandarin listener would hear what you meant. Tone slips show up as a different character.</p>
+      ${HAS_SR ? `<p class="small">Tap <b>🎙 Speak</b>, allow the microphone, say the phrase once, and it checks automatically.</p>` : ""}
+      <p class="muted small">${HAS_SR ? "No microphone button? " : ""}Use your keyboard instead: add a Chinese pinyin keyboard (class 1.3 shows how), tap the box, switch to Chinese, tap the keyboard's microphone, say it, then tap Check.</p>
+    </div>
+    <div class="toggles">${src("lesson","Today's words")}${src("story","Story sentences")}${src("deck","My deck")}${src("basics","Pinyin & tone drills")}${S.speak.custom ? `<button class="tog" aria-pressed="true">From class</button>` : ""}</div>
+    ${it ? `<div class="panel" style="align-items:stretch">
+      <span class="label" style="text-align:center">${S.speak.custom ? "Phrase" : `${i + 1} of ${items.length}`}</span>
+      <div class="target">${esc(it.h)}</div>
+      ${it.p ? `<div class="target-py">${esc(it.p)}</div>` : ""}${it.e ? `<div class="small" style="text-align:center">${esc(it.e)}</div>` : ""}
+      <div class="row" style="justify-content:center">${listenBtns(it.h)}</div>
+      <label class="label" for="dict">What came through</label>
+      <textarea class="dict" id="dict" lang="zh" placeholder="${HAS_SR ? "Tap 🎙 Speak, or dictate here with your Chinese keyboard" : "Tap here, then your Chinese keyboard's 🎙"}">${esc(S.speak.heard)}</textarea>
+      <div class="row" style="justify-content:space-between">
+        <div class="row">${HAS_SR ? `<button class="btn red" data-act="mic" data-h="${esc(it.h)}">${S.listening ? '<span class="spin"></span> Listening… tap to stop' : "🎙 Speak"}</button>` : ""}<button class="btn primary" data-act="do-check" data-h="${esc(it.h)}">Check</button><button class="btn" data-act="clear-dict">Clear</button></div>
+        ${S.speak.custom ? `<button class="btn" data-act="speak-src" data-k="${S.speak.source}">Back to list</button>` : `<div class="row"><button class="btn" data-act="speak-prev" ${i === 0 ? "disabled" : ""}>← Prev</button><button class="btn" data-act="speak-next">Next →</button></div>`}
+      </div>
+    </div>${result}` : `<div class="panel empty">Nothing here yet. Start a lesson, or pick Pinyin &amp; tone drills.</div>`}
+  </section>`;
+}
+function renderDeck(){
+  const rows = S.words.slice().reverse().map(w => `<tr><td><span class="hz">${esc(w.hanzi)}</span></td><td class="mono">${esc(w.pinyin)}</td><td>${esc(w.meaning)}</td><td><span class="hz">${esc(w.anki && w.anki.sentence)}</span><br><span class="muted">${esc(w.anki && w.anki.english)}</span></td><td class="mono muted">L${esc(w.lesson)}</td><td><div class="row">${listenBtns(w.hanzi)}</div></td></tr>`).join("");
+  return `<section class="panel" style="gap:16px">
+    <div class="row" style="justify-content:space-between"><div><div class="label">Your deck</div><h2 style="font-size:20px">${S.words.length} card${S.words.length===1?"":"s"}</h2></div>
+      <button class="btn primary" data-act="export-all" ${S.words.length?"":"disabled"}>Export for Anki (.csv)</button></div>
+    <p class="muted small">The file downloads to your device. It is semicolon-separated with Anki headers, so importing maps the fields automatically: Front, Pinyin, Meaning, Radicals, Sentence, Sentence pinyin, Sentence English, Image idea, Pronunciation, Tags. AnkiDroid: ⋮ › Import. Anki desktop: File › Import.</p>
+    <p class="err" id="deck-err"></p>
+    ${S.words.length ? `<div class="tablewrap"><table><thead><tr><th>Word</th><th>Pinyin</th><th>Meaning</th><th>Context</th><th>Lesson</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`
+      : `<div class="empty">Cards appear here when you finish a lesson's 5-sentence challenge.</div>`}
+  </section>`;
+}
+function fmtChat(t){ return esc(t).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/([㐀-鿿]+)/g, '<span class="hzs">$1</span>'); }
+function renderCoach(){
+  const msgs = S.chat.map(m => `<div class="msg ${m.role === "user" ? "user" : "coach"}">${fmtChat(m.content)}</div>`).join("");
+  return `<section class="chat">
+    <div class="panel" style="gap:6px"><div class="label">Ask anything</div><p class="muted">Grammar questions, “how would a native say…”, tone help, 了 vs 过, a class you're stuck on, or paste a message from your language partner to break down.</p></div>
+    ${AI.key() ? "" : `<p class="notice">${NO_KEY} <button class="back" data-act="goto" data-v="profile">Add a key</button></p>`}
+    ${msgs || `<div class="msg coach">你好！What would you like to work on? Try: “What's the difference between 二 and 两?”</div>`}
+    <div class="composer"><textarea id="chat-in" rows="2" placeholder="Type in English or Chinese…"></textarea>
+      <button class="btn primary" data-act="chat-send" ${S.busy ? "disabled" : ""}>${S.busy === "chat" ? '<span class="spin"></span>' : "Send"}</button></div>
+    <p class="err">${esc(S.lastError)}</p>
+  </section>`;
+}
+function aiPanel(){
+  const k = AI.key(), pv = AI.provider() || "gemini", m = AI.model();
+  return `<form class="panel" id="ai-form">
+    <h2 style="font-size:16px">AI lessons and coach</h2>
+    <p class="muted small">The course, goals, tracker, sample lesson, speaking check and Anki export are free and need nothing. Custom lessons, sentence polish and the coach need an AI key of your own. Use either one:</p>
+    <div class="coach small"><b>Google Gemini: free to start.</b> Go to aistudio.google.com, sign in with a Google account, choose <b>Get API key</b> › <b>Create API key</b>, and paste it here. The free tier has daily limits; heavy use may need billing turned on.</div>
+    <div class="coach small" style="background:var(--paper)"><b>Anthropic Claude: pay as you go.</b> Sign up at console.anthropic.com, add a little credit under Billing (£5 lasts a long time), create a key under API keys, and paste it here. About 10p per full lesson on Sonnet, under 1p on Haiku.</div>
+    <div class="field"><label class="label" for="ai-key">API key (Gemini keys start AIza, Claude keys start sk-ant-)</label><input id="ai-key" type="password" autocomplete="off" spellcheck="false" placeholder="AIza… or sk-ant-…" value="${esc(k)}"></div>
+    <div class="field"><label class="label" for="ai-model">Model</label><select id="ai-model">${MODELS[pv].map(([id, l]) => `<option value="${id}" ${id === m ? "selected" : ""}>${esc(l)}</option>`).join("")}</select>
+      <span class="muted small">${k ? (pv === "gemini" ? "Using your Google Gemini key." : "Using your Anthropic Claude key.") : "Models shown for Gemini. Claude models appear once you save a Claude key."}</span></div>
+    <div class="row"><button class="btn primary" type="submit">Save key</button>${k ? '<button class="btn" type="button" data-act="ai-test">Test key</button><button class="btn" type="button" data-act="ai-remove">Remove key</button>' : ""}<span class="small" id="ai-msg">${k ? "Key saved in this browser." : ""}</span></div>
+    <p class="muted small">Your key is stored only in this browser and is sent only to ${k ? (pv === "gemini" ? "Google" : "Anthropic") : "Google or Anthropic"}. Don't save it on a shared or public computer. Prices and free limits are set by the providers and can change.</p>
+  </form>`;
+}
+function renderProfile(){
+  return profileForm(S.profile, !S.profile) + aiPanel() + `<div class="panel"><h2 style="font-size:16px">Start over</h2>
+    <p class="muted">Deletes your profile, course progress, tracker, current lesson and deck in this browser. Your API key stays unless you remove it above.</p>
+    <div class="row">${S.confirmReset ? '<button class="btn" data-act="reset-yes" style="border-color:var(--bad);color:var(--bad)">Yes, delete everything</button><button class="btn" data-act="reset-no">Keep it</button>' : '<button class="btn" data-act="reset">Reset progress</button>'}</div>
+    <p class="muted small">Progress is saved in this browser on this device. Use a backup to move it to another device.</p></div>
+    <div class="panel"><h2 style="font-size:16px">Backup</h2>
+      <p class="muted small">Save your profile, course progress, tracker and deck as a file, then restore it on another phone or computer.</p>
+      <div class="row"><button class="btn" data-act="backup">Download backup</button><label class="btn" for="restore-file">Restore from backup</label><input type="file" id="restore-file" accept=".json,application/json" hidden></div>
+      <p class="muted small" id="backup-msg"></p></div>`;
+}
+function render(){
+  document.documentElement.classList.toggle("trad", !!(S.profile && S.profile.script === "traditional"));
+  $("#count").textContent = S.words.length;
+  $("#bar").style.width = Math.min(100, S.words.length / 10) + "%";
+  $("#tabs").innerHTML = TABS.map(([k, l]) => `<button role="tab" data-view="${k}" aria-selected="${S.view === k}">${l}</button>`).join("");
+  const v = S.view;
+  $("#view").innerHTML = v === "course" ? renderCourse() : v === "goals" ? renderGoals() : v === "speak" ? renderSpeak() : v === "deck" ? renderDeck() : v === "coach" ? renderCoach() : v === "profile" ? renderProfile() : renderLessonTab();
+}
+function go(view){ if (recog) { try { recog.abort(); } catch {} recog = null; S.listening = false; } S.view = view; S.lastError = ""; S.confirmReset = false; render(); window.scrollTo({top:0}); }
+
+/* ---------- actions ---------- */
+function collectDrafts(){
+  const d = {};
+  document.querySelectorAll("textarea.ans").forEach(t => { (d[t.dataset.wi] = d[t.dataset.wi] || [])[+t.dataset.k] = t.value; });
+  return d;
+}
+function normaliseLesson(L){
+  if (!L || !Array.isArray(L.words) || !L.words.length) throw {code:"invalid_json"};
+  L.words = L.words.filter(w => w && w.hanzi).map(w => ({...w, characters:arr(w.characters), family:arr(w.family), anki:w.anki||{}}));
+  L.story = L.story || {}; L.clinic = L.clinic || {};
+  return L;
+}
+async function generate(classId){
+  const sample = await use("sample");
+  if (!sample) { S.lastError = NO_KEY; render(); return; }
+  const count = +($("#wc") ? $("#wc").value : 3) || 3;
+  const n = (S.profile.lessonCount || 0) + 1;
+  const cls = classId ? ALL_CLASSES.find(c => c.id === classId) : null;
+  S.busy = "lesson"; S.lastError = ""; S.ctl = new AbortController(); render();
+  try {
+    const L = normaliseLesson(await sample.json(lessonPrompt(n, count, cls), { signal:S.ctl.signal, cache:false,
+      onText: ({text}) => { const el = $("#gen-progress"); if (el) el.textContent = `Writing… ${text.length.toLocaleString()} characters so far`; } }));
+    S.current = { number:n, lesson:L, drafts:{}, feedback:null, classId:classId || "", createdAt:Date.now() };
+    S.reader = {seg:false, py:false, en:false, shadow:false};
+    await persist(s => s.saveCurrent(S.current));
+    S.busy = null; S.openClass = null; go("lesson"); return;
+  } catch (e) { if (e && e.code !== "cancelled") S.lastError = errCopy(e); }
+  S.busy = null; render();
+}
+async function submitChallenge(){
+  const isSample = !S.current;
+  const lesson = isSample ? SAMPLE : S.current.lesson;
+  const drafts = collectDrafts();
+  const missing = arr(lesson.words).some((w, wi) => SLOT_LABELS.some((_, k) => !str((drafts[wi]||[])[k]).trim()));
+  if (isSample) S.sampleDrafts = drafts; else { S.current.drafts = drafts; persist(s => s.saveCurrent(S.current)); }
+  if (missing) { S.lastError = "Fill in all five sentences for every word first. A short attempt is fine."; render(); return; }
+  const sample = await use("sample");
+  if (!sample) { S.lastError = NO_KEY; render(); return; }
+  S.busy = "feedback"; S.lastError = ""; S.ctl = new AbortController(); render();
+  try {
+    const fb = await sample.json(feedbackPrompt(lesson, drafts), { signal:S.ctl.signal, cache:false });
+    if (!fb || !Array.isArray(fb.sentences)) throw {code:"invalid_json"};
+    if (isSample) S.sampleFeedback = fb; else { S.current.feedback = fb; await persist(s => s.saveCurrent(S.current)); }
+  } catch (e) { if (e && e.code !== "cancelled") S.lastError = errCopy(e); }
+  S.busy = null; render();
+}
+async function finishLesson(){
+  if (!S.current) return;
+  S.busy = "finish"; render();
+  const now = Date.now(), cur = S.current;
+  const cards = arr(cur.lesson.words).map((w, i) => ({ hanzi:w.hanzi, pinyin:w.pinyin, meaning:w.meaning, characters:w.characters, anki:w.anki, pronunciation:w.pronunciation, personal:!!w.personal, lesson:cur.number, learnedAt:now + i }));
+  S.words = S.words.concat(cards);
+  S.profile = {...S.profile, lessonCount:cur.number};
+  S.current = null;
+  today().newCards = (today().newCards || 0) + cards.length;
+  if (cur.classId) setDone(cur.classId, true);
+  await persist(async s => { await s.addWords(cards); await s.saveProfile(S.profile); await s.saveCurrent(null); await s.saveDays(S.days); });
+  setStatus(`Lesson complete. ${cards.length} cards added to your deck.${cur.classId ? ` Class ${cur.classId} is done.` : ""}`);
+  S.busy = null;
+  if (cur.classId) { S.openClass = null; go("course"); } else { render(); window.scrollTo({top:0}); }
+}
+function csvFor(words){
+  const q = v => `"${str(v).replace(/"/g, '""').replace(/\r?\n/g, " ")}"`;
+  const head = "#separator:semicolon\n#html:false\n#columns:Front;Pinyin;Meaning;Radicals;Sentence;Sentence pinyin;Sentence English;Image idea;Pronunciation;Tags\n#tags column:10\n";
+  return head + words.map(w => {
+    const a = w.anki || {};
+    const rad = arr(w.characters).map(c => `${c.char} ${c.pinyin}: ${c.radical}; sound: ${c.phonetic}`).join(" | ");
+    const tags = ["mandarin8020", "lesson" + (w.lesson || 0)].concat(w.personal ? ["personal"] : []).join(" ");
+    return [w.hanzi, w.pinyin, w.meaning, rad, a.sentence, a.pinyin, a.english, a.image, w.pronunciation, tags].map(q).join(";");
+  }).join("\n") + "\n";
+}
+async function exportCards(words, name){
+  const data = csvFor(words);
+  const dl = await use("downloads");
+  if (dl) { try { await dl.save({filename:name, data}); setStatus("Downloaded " + name); return; } catch (e) { if (e && e.code === "declined") return; } }
+  try { await navigator.clipboard.writeText(data); setStatus("Couldn't save a file here, so the cards were copied. Paste them into a .csv file and import it into Anki."); }
+  catch { setStatus("Saving isn't available in this view."); }
+}
+async function sendChat(){
+  const box = $("#chat-in"); const text = box ? box.value.trim() : "";
+  if (!text) return;
+  const sample = await use("sample");
+  if (!sample) { S.lastError = NO_KEY; render(); return; }
+  S.chat.push({role:"user", content:text}); S.busy = "chat"; S.lastError = ""; render();
+  const nx = nextClass();
+  const rules = `${COACH}\n\n${learnerBlock()}\n- Course: the learner is following a 6-module, 36-class course (Orientation, Navigation, Foundations, Input Engine, Output Arena, Integration).${nx ? ` Next class: ${nx.id} ${nx.title}.` : ""}\n\nYou are answering questions in a chat inside the learner's app. Answer directly and concisely in plain text (no markdown headings or tables; **bold** is fine). Always give pinyin with tone marks next to Chinese, and an English gloss.`;
+  const turns = [{role:"user", content:rules}, {role:"assistant", content:"Understood. Ask me anything."}].concat(S.chat.slice(-16));
+  const bubble = document.createElement("div"); bubble.className = "msg coach"; bubble.textContent = "Thinking…";
+  const composer = document.querySelector(".composer"); composer.parentNode.insertBefore(bubble, composer);
+  try {
+    const { text: ans } = await sample(turns, { cache:false, onText: ({text}) => { bubble.innerHTML = fmtChat(text); } });
+    S.chat.push({role:"assistant", content:ans});
+  } catch (e) { S.chat.pop(); S.lastError = errCopy(e); }
+  S.busy = null; render();
+  const inp = $("#chat-in"); if (inp) inp.focus();
+}
+async function coachMe(){
+  const r = S.speak.result; if (!r) return;
+  const sample = await use("sample");
+  if (!sample) { S.speak.advice = NO_KEY; render(); return; }
+  const issues = r.chars.filter(v => v.kind !== "correct").map(v => `${v.t} (${v.tp}) heard as ${v.h ? v.h + " (" + v.hp + ")" : "nothing"}`).join("; ");
+  S.busy = "advice"; S.speak.advice = ""; render();
+  try {
+    const { text } = await sample(`${COACH}\n\nThe learner tried to say: ${S.speak.target}. Their phone's Chinese voice typing produced: ${r.heard || "(nothing)"} (${r.heardPy}). Mismatches: ${issues || "none"}.\n\nVoice typing only shows which syllables came out as a different sound or tone, so reason from those confusions. In under 150 words, plain text with short lines: name the most likely cause of each confusion, give one exact tongue/lip/breath fix for each, any tone sandhi in this phrase, and one 10-second drill to do now.`, {cache:false});
+    S.speak.advice = text;
+  } catch (e) { S.speak.advice = errCopy(e); }
+  S.busy = null; render();
+}
+
+document.addEventListener("click", async ev => {
+  const tab = ev.target.closest("#tabs button");
+  if (tab) { if (tab.dataset.view === "course") S.openClass = null; go(tab.dataset.view); return; }
+  const b = ev.target.closest("[data-act]"); if (!b || b.tagName === "INPUT") return;
+  const act = b.dataset.act;
+  if (act === "speak") speak(b.dataset.text, false);
+  else if (act === "speak-slow") speak(b.dataset.text, true);
+  else if (act === "goto") { S.openClass = null; go(b.dataset.v); }
+  else if (act === "jump") { const el = document.getElementById("module-" + b.dataset.m); if (el) el.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"}); }
+  else if (act === "open-class") { S.openClass = b.dataset.id; S.lastError = ""; S.view = "course"; render(); window.scrollTo({top:0}); }
+  else if (act === "close-class") { const id = S.openClass; S.openClass = null; render(); const m = ALL_CLASSES.find(c => c.id === id); const el = m && document.getElementById("module-" + m.module); if (el) el.scrollIntoView(); }
+  else if (act === "done") { setDone(b.dataset.id, true); render(); }
+  else if (act === "undone") { setDone(b.dataset.id, false); render(); }
+  else if (act === "check") { S.speak.custom = {h:b.dataset.h.replace(/…/g, ""), p:b.dataset.p, e:b.dataset.e}; S.speak.result = null; S.speak.heard = ""; S.speak.advice = ""; go("speak"); }
+  else if (act === "speak-story") { S.speak.custom = null; S.speak.source = "story"; S.speak.idx = 0; S.speak.result = null; S.speak.heard = ""; go("speak"); }
+  else if (act === "speak-src") { S.speak.custom = null; S.speak.source = b.dataset.k; S.speak.idx = 0; S.speak.result = null; S.speak.heard = ""; S.speak.advice = ""; render(); }
+  else if (act === "speak-next") { const n = speakItems().length; S.speak.idx = n ? (S.speak.idx + 1) % n : 0; S.speak.result = null; S.speak.heard = ""; S.speak.advice = ""; render(); }
+  else if (act === "speak-prev") { S.speak.idx = Math.max(0, S.speak.idx - 1); S.speak.result = null; S.speak.heard = ""; S.speak.advice = ""; render(); }
+  else if (act === "clear-dict") { S.speak.heard = ""; S.speak.result = null; render(); const d = $("#dict"); if (d) d.focus(); }
+  else if (act === "do-check") runCheck(b.dataset.h, ($("#dict") || {}).value || "");
+  else if (act === "mic") startMic(b.dataset.h);
+  else if (act === "ai-remove") { AI.set("", null); render(); }
+  else if (act === "ai-test") {
+    const msg = $("#ai-msg"); if (msg) msg.textContent = "Testing…";
+    try { const s = makeSample(); await s("Reply with just the word 好.", {maxTokens:200}); if ($("#ai-msg")) $("#ai-msg").textContent = "✓ The key works."; }
+    catch (e) { if ($("#ai-msg")) $("#ai-msg").textContent = errCopy(e); }
+  }
+  else if (act === "backup") {
+    const data = JSON.stringify({app:"mandarin-8020-coach", version:1, savedAt:new Date().toISOString(), profile:S.profile, current:S.current, words:S.words, progress:S.progress, days:S.days}, null, 1);
+    const blob = new Blob([data], {type:"application/json"}), url = URL.createObjectURL(blob), a = document.createElement("a");
+    a.href = url; a.download = "mandarin-80-20-backup-" + dayKey() + ".json"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 4000);
+  }
+  else if (act === "coach-me") coachMe();
+  else if (act === "tog") { if (S.current) S.current.drafts = collectDrafts(); else S.sampleDrafts = collectDrafts(); S.reader[b.dataset.k] = !S.reader[b.dataset.k]; render(); }
+  else if (act === "gen") generate(b.dataset.class || "");
+  else if (act === "stop") { if (S.ctl) S.ctl.abort(); }
+  else if (act === "submit-chal") submitChallenge();
+  else if (act === "finish") finishLesson();
+  else if (act === "export-all") exportCards(S.words, "mandarin-80-20-anki.csv");
+  else if (act === "export-lesson") exportCards(arr(S.current && S.current.lesson.words).map(w => ({...w, lesson:S.current.number})), `mandarin-80-20-lesson-${S.current.number}.csv`);
+  else if (act === "copy") { try { await navigator.clipboard.writeText(b.dataset.text); b.textContent = "Copied"; } catch { b.textContent = "Select and copy the text above"; } }
+  else if (act === "chat-send") sendChat();
+  else if (act === "log") { bump("minutes", +b.dataset.n); render(); }
+  else if (act === "conv") { bump("conversations", 1); setStatus("Conversation logged. Nice work."); render(); }
+  else if (act === "goals-edit") { S.editGoals = true; render(); }
+  else if (act === "goals-cancel") { S.editGoals = false; render(); }
+  else if (act === "reset") { S.confirmReset = true; render(); }
+  else if (act === "reset-no") { S.confirmReset = false; render(); }
+  else if (act === "reset-yes") {
+    try { await S.store.reset(); } catch {}
+    Object.assign(S, {profile:null, current:null, words:[], progress:{}, days:{}, chat:[], confirmReset:false, view:"course", openClass:null, sampleDrafts:null, sampleFeedback:null});
+    setStatus("Progress reset."); render();
+  }
+});
+document.addEventListener("change", ev => {
+  const t = ev.target;
+  if (t.id === "restore-file" && t.files && t.files[0]) {
+    const fr = new FileReader();
+    fr.onload = async () => {
+      try {
+        const o = JSON.parse(fr.result);
+        if (!o || o.app !== "mandarin-8020-coach") throw 0;
+        Object.assign(S, {profile:o.profile || null, current:o.current || null, words:arr(o.words), progress:o.progress || {}, days:o.days || {}});
+        const st = S.store; await st.saveProfile(S.profile); await st.saveCurrent(S.current); await st.saveProgress(S.progress); await st.saveDays(S.days);
+        try { const k = "m8020-v2", x = JSON.parse(localStorage.getItem(k) || "{}"); x.words = S.words; localStorage.setItem(k, JSON.stringify(x)); } catch {}
+        setStatus("Backup restored."); render();
+      } catch { const m = $("#backup-msg"); if (m) m.textContent = "That file isn't a Mandarin 80/20 backup."; }
+    };
+    fr.readAsText(t.files[0]); return;
+  }
+  if (t.dataset && t.dataset.act === "task") {
+    const id = t.dataset.id, i = +t.dataset.i, c = ALL_CLASSES.find(x => x.id === id);
+    const pr = S.progress[id] = S.progress[id] || {};
+    const set = new Set(arr(pr.tasks)); t.checked ? set.add(i) : set.delete(i); pr.tasks = [...set];
+    persist(s => s.saveProgress(S.progress));
+    if (c && c.kind !== "aiLesson" && set.size === c.tasks.length && !pr.done) { setDone(id, true); setStatus(`Class ${id} complete.`); }
+    render();
+  }
+});
+document.addEventListener("submit", async ev => {
+  ev.preventDefault();
+  const f = ev.target;
+  if (f.id === "ai-form") {
+    const k = f.querySelector("#ai-key").value.trim(), m = f.querySelector("#ai-model").value;
+    if (k && !providerOf(k)) { $("#ai-msg").textContent = "That doesn't look like a Gemini key (starts AIza) or a Claude key (starts sk-ant-)."; return; }
+    const pv = providerOf(k), mm = pv && MODELS[pv].some(x => x[0] === m) ? m : null;
+    AI.set(k, mm); setStatus(k ? `${pv === "gemini" ? "Gemini" : "Claude"} key saved. AI lessons and the coach are on.` : "API key removed."); render(); return;
+  }
+  if (f.id === "goals-form") {
+    S.profile = {...S.profile, motivation:f.querySelector("#g-why").value.trim(), skills:f.querySelector("#g-skills").value.trim(),
+      targetHSK:+f.querySelector("#g-hsk").value, targetDate:f.querySelector("#g-date").value, milestones:f.querySelector("#g-miles").value.trim(),
+      dailyMinutes:Math.max(5, +f.querySelector("#g-min").value || 20), dailyCards:Math.max(1, +f.querySelector("#g-cards").value || 10),
+      weeklyConv:Math.max(0, +f.querySelector("#g-conv").value || 0), minimumDay:f.querySelector("#g-minday").value.trim()};
+    await persist(s => s.saveProfile(S.profile));
+    S.editGoals = false; setStatus("Goals saved."); render(); return;
+  }
+  if (f.id !== "profile-form") return;
+  const script = (f.querySelector('input[name="script"]:checked') || {}).value;
+  const level = (f.querySelector('input[name="level"]:checked') || {}).value;
+  const topics = f.querySelector("#topics").value.trim();
+  if (!script || !level || !topics) { $("#pf-err").textContent = "Answer all three questions so lessons fit you."; return; }
+  const wasNew = !S.profile;
+  const td = new Date(); td.setMonth(td.getMonth() + 6);
+  S.profile = {...(S.profile || {lessonCount:0, createdAt:Date.now(), targetHSK:3, targetDate:dayKey(td), dailyMinutes:20, dailyCards:10, weeklyConv:1, minimumDay:"5 minutes of Anki reviews"}), script, level, topics};
+  await persist(s => s.saveProfile(S.profile));
+  setStatus(wasNew ? "Profile saved. Start with the course, or write your first lesson here." : "Profile saved.");
+  if (wasNew) { S.openClass = "1.1"; go("course"); } else go("lesson");
+});
+document.addEventListener("keydown", ev => { if (ev.target.id === "chat-in" && ev.key === "Enter" && !ev.shiftKey) { ev.preventDefault(); if (!S.busy) sendChat(); } });
+document.addEventListener("input", ev => {
+  if (ev.target.matches && ev.target.matches("textarea.ans")) { ev.target.style.height = "auto"; ev.target.style.height = ev.target.scrollHeight + "px"; }
+  if (ev.target.id === "dict") S.speak.heard = ev.target.value;
+});
+if (HAS_TTS) { try { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices(); } catch {} }
+
+/* ---------- boot ---------- */
+if ("serviceWorker" in navigator && location.protocol === "https:") { navigator.serviceWorker.register("sw.js").catch(() => {}); }
+render();
+(async () => {
+  S.store = await initStore();
+  try {
+    const d = await S.store.load();
+    Object.assign(S, {profile:d.profile, current:d.current, words:d.words, progress:d.progress || {}, days:d.days || {}});
+    setStatus("");
+  } catch {
+    S.store = localStore(); const d = await S.store.load(); Object.assign(S, d);
+    setStatus("Couldn't reach your saved progress, so this browser's copy is in use.");
+  }
+  render();
+})();
+</script>
+
+</body>
+</html>
