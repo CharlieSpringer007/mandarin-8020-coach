@@ -14,6 +14,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Serif+SC:wght@400;600;700&family=Noto+Serif+TC:wght@400;600;700&display=swap">
 <script src="https://cdn.jsdelivr.net/npm/pinyin-pro@3.26.0/dist/index.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <style>
 /* Layout: one reading column; a scrollable tab strip on top; the course is a vertical list of six modules; lessons are five numbered steps with characters in 田字格 practice squares */
 :root{
@@ -71,6 +74,9 @@ nav.tabs::-webkit-scrollbar{display:none}
 nav.tabs button{background:none;border:0;padding:10px 12px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;font-weight:500}
 nav.tabs button[aria-selected="true"]{color:var(--ink);border-color:var(--seal)}
 .status{font-size:13px;color:var(--muted);min-height:1em}
+#acct{max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+.or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12px}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
 
 .panel{background:var(--sheet);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:var(--sheet);border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:500;text-decoration:none;color:var(--ink);min-height:38px}
@@ -271,6 +277,7 @@ tr:last-child td{border-bottom:0}
         <p>A six-module course built on the 1,000 words you'll actually use.</p>
       </div>
     </div>
+    <button class="btn small" id="acct" data-act="goto" data-v="profile" hidden>Sign in</button>
     <div class="meter" aria-label="Progress through the core 1,000 words">
       <div class="row"><span class="label">Core words learned</span><span><b id="count">0</b> <span class="muted">/ 1,000</span></span></div>
       <div class="track"><i id="bar"></i></div>
@@ -467,12 +474,86 @@ const browserDownloads = { async save({filename, data}){
   a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 4000);
 } };
+/* ---------- Accounts and sync (Firebase). Leave FIREBASE_CONFIG null to run without accounts. ---------- */
+const FIREBASE_CONFIG = {apiKey:"AIzaSyC8uGmqWsAPIWIPyieT9DFKxA8r43OcdDw",authDomain:"mandarin-8020-coach.firebaseapp.com",projectId:"mandarin-8020-coach",storageBucket:"mandarin-8020-coach.firebasestorage.app",messagingSenderId:"424407985014",appId:"1:424407985014:web:96350e6b9494f4f6b32857"};
+const FB = { on:false, auth:null, db:null, user:null, ready:false };
+try {
+  if (FIREBASE_CONFIG && window.firebase) {
+    firebase.initializeApp(FIREBASE_CONFIG);
+    FB.auth = firebase.auth(); FB.db = firebase.firestore();
+    FB.db.enablePersistence({synchronizeTabs:true}).catch(() => {});
+    FB.on = true;
+  }
+} catch {}
+const clean = o => JSON.parse(JSON.stringify(o ?? null));
+function cloudStore(uid){
+  const userDoc = FB.db.collection("users").doc(uid), words = userDoc.collection("words");
+  const put = (k, v) => userDoc.set({[k]: clean(v), updatedAt: firebase.firestore.FieldValue.serverTimestamp()}, {merge:true});
+  return {
+    kind:"cloud",
+    async load(){
+      const [d, w] = await Promise.all([userDoc.get(), words.orderBy("learnedAt").limit(1000).get()]);
+      const o = d.exists ? d.data() : {};
+      return { profile:o.profile || null, current:o.current || null, progress:o.progress || {}, days:o.days || {}, words:w.docs.map(x => x.data()) };
+    },
+    saveProfile: p => put("profile", p),
+    saveCurrent: c => put("current", c),
+    saveProgress: p => put("progress", p),
+    saveDays: d => put("days", d),
+    async addWords(list){ const b = FB.db.batch(); list.forEach(w => b.set(words.doc(), clean(w))); await b.commit(); },
+    async reset(){
+      const w = await words.get();
+      for (let i = 0; i < w.docs.length; i += 400) { const b = FB.db.batch(); w.docs.slice(i, i + 400).forEach(d => b.delete(d.ref)); await b.commit(); }
+      await userDoc.delete();
+    }
+  };
+}
+function authError(e){
+  const c = (e && e.code) || "";
+  if (/invalid-credential|wrong-password|user-not-found|invalid-login/.test(c)) return "That email and password don't match. Check them, or create an account.";
+  if (c === "auth/email-already-in-use") return "There's already an account with this email. Sign in instead.";
+  if (c === "auth/weak-password") return "Use a password of at least 6 characters.";
+  if (c === "auth/invalid-email" || c === "auth/missing-email") return "Enter a valid email address.";
+  if (c === "auth/missing-password") return "Enter your password.";
+  if (c === "auth/too-many-requests") return "Too many attempts. Wait a few minutes, then try again.";
+  if (c === "auth/network-request-failed") return "No internet connection. Try again when you're online.";
+  if (c === "auth/unauthorized-domain") return "This website isn't authorised for sign-in yet.";
+  if (c === "auth/requires-recent-login") return "For security, sign out and sign in again, then retry.";
+  if (c === "auth/popup-closed-by-user" || c === "auth/cancelled-popup-request") return "";
+  return "Sign-in didn't work" + (e && e.message ? ": " + e.message.replace(/^Firebase: /, "") : ".");
+}
+async function switchToCloud(user){
+  const cloud = cloudStore(user.uid);
+  setStatus("Loading your account…");
+  let d;
+  try { d = await cloud.load(); } catch (e) { setStatus("Couldn't load your account. Check your connection and reload."); return; }
+  const local = await localStore().load();
+  const localHasData = !!(local.profile || local.words.length || Object.keys(local.progress).length);
+  if (!d.profile && !d.words.length && localHasData) {
+    try {
+      await cloud.saveProfile(local.profile); await cloud.saveCurrent(local.current); await cloud.saveProgress(local.progress); await cloud.saveDays(local.days);
+      if (local.words.length) for (let i = 0; i < local.words.length; i += 400) await cloud.addWords(local.words.slice(i, i + 400));
+      d = local;
+      setStatus("Your progress on this device is now saved to your account.");
+    } catch { setStatus("Couldn't copy this device's progress to your account. Try again later."); }
+  } else setStatus(d.profile ? "Signed in. Your progress is synced." : "Signed in.");
+  S.store = cloud;
+  Object.assign(S, {profile:d.profile, current:d.current, words:d.words, progress:d.progress || {}, days:d.days || {}});
+  render();
+}
+async function switchToLocal(){
+  S.store = localStore();
+  const d = await S.store.load();
+  Object.assign(S, {profile:d.profile, current:d.current, words:d.words, progress:d.progress || {}, days:d.days || {}, chat:[]});
+  render();
+}
 const use = async n => n === "sample" ? makeSample() : n === "downloads" ? browserDownloads : null;
 async function initStore(){ return localStore(); }
 async function initStore(){ return localStore(); }
 async function persist(fn){
   try { await fn(S.store); }
   catch (e) {
+    if (S.store && S.store.kind === "cloud") { setStatus("Couldn't save to your account" + (e && e.code === "permission-denied" ? " (permission denied). Sign out and in again." : ". It will retry when you're back online.")); return; }
     if (S.store && S.store.kind === "db") {
       S.store = localStore();
       await S.store.saveProfile(S.profile); await S.store.saveCurrent(S.current);
@@ -1051,11 +1132,32 @@ function aiPanel(){
     <p class="muted small">Your key is stored only in this browser and is sent only to ${k ? (pv === "gemini" ? "Google" : "Anthropic") : "Google or Anthropic"}. Don't save it on a shared or public computer. Prices and free limits are set by the providers and can change.</p>
   </form>`;
 }
+function accountPanel(){
+  if (!FB.on) return "";
+  const u = FB.user;
+  if (u) return `<div class="panel" id="account">
+    <h2 style="font-size:16px">Your account</h2>
+    <p>Signed in as <b>${esc(u.email || u.displayName || "your account")}</b>.</p>
+    <p class="muted small">Your profile, course progress, tracker and deck are saved to your account, private to you, and synced on every device where you sign in. Your AI key stays only on this device.</p>
+    <div class="row"><button class="btn" data-act="signout">Sign out</button>${S.confirmDelete ? `<button class="btn" data-act="delete-yes" style="border-color:var(--bad);color:var(--bad)">Yes, delete my account and data</button><button class="btn" data-act="delete-no">Keep it</button>` : `<button class="btn" data-act="delete-acct">Delete account</button>`}</div>
+    <p class="err" id="acct-err"></p>
+  </div>`;
+  return `<form class="panel" id="account-form">
+    <h2 style="font-size:16px">Sign in to save your progress</h2>
+    <p class="muted small">Optional. With an account, your profile and progress are private to you and follow you to every device. Without one, they stay in this browser only.</p>
+    <div class="row"><button class="btn" type="button" data-act="google">Continue with Google</button></div>
+    <div class="or">or use your email</div>
+    <div class="field"><label class="label" for="acct-email">Email</label><input id="acct-email" type="email" autocomplete="email" inputmode="email"></div>
+    <div class="field"><label class="label" for="acct-pass">Password</label><input id="acct-pass" type="password" autocomplete="current-password" minlength="6"></div>
+    <div class="row"><button class="btn primary" type="submit" data-mode="signin">Sign in</button><button class="btn" type="submit" data-mode="create">Create account</button><button class="back" type="button" data-act="forgot">Forgot password?</button></div>
+    <p class="err" id="acct-err"></p><p class="small" id="acct-msg"></p>
+  </form>`;
+}
 function renderProfile(){
-  return profileForm(S.profile, !S.profile) + aiPanel() + `<div class="panel"><h2 style="font-size:16px">Start over</h2>
-    <p class="muted">Deletes your profile, course progress, tracker, current lesson and deck in this browser. Your API key stays unless you remove it above.</p>
+  return accountPanel() + profileForm(S.profile, !S.profile) + aiPanel() + `<div class="panel"><h2 style="font-size:16px">Start over</h2>
+    <p class="muted">Deletes your profile, course progress, tracker, current lesson and deck${S.store && S.store.kind === "cloud" ? " from your account" : " in this browser"}. Your API key stays unless you remove it above.</p>
     <div class="row">${S.confirmReset ? '<button class="btn" data-act="reset-yes" style="border-color:var(--bad);color:var(--bad)">Yes, delete everything</button><button class="btn" data-act="reset-no">Keep it</button>' : '<button class="btn" data-act="reset">Reset progress</button>'}</div>
-    <p class="muted small">Progress is saved in this browser on this device. Use a backup to move it to another device.</p></div>
+    <p class="muted small">${S.store && S.store.kind === "cloud" ? "This deletes it from your account on every device." : "Progress is saved in this browser on this device. Sign in, or use a backup, to move it to another device."}</p></div>
     <div class="panel"><h2 style="font-size:16px">Backup</h2>
       <p class="muted small">Save your profile, course progress, tracker and deck as a file, then restore it on another phone or computer.</p>
       <div class="row"><button class="btn" data-act="backup">Download backup</button><label class="btn" for="restore-file">Restore from backup</label><input type="file" id="restore-file" accept=".json,application/json" hidden></div>
@@ -1065,6 +1167,8 @@ function render(){
   document.documentElement.classList.toggle("trad", !!(S.profile && S.profile.script === "traditional"));
   $("#count").textContent = S.words.length;
   $("#bar").style.width = Math.min(100, S.words.length / 10) + "%";
+  const ab = $("#acct");
+  if (ab) { ab.hidden = !FB.on; ab.textContent = FB.user ? (FB.user.email || "Account") : "Sign in"; ab.title = FB.user ? "Signed in as " + (FB.user.email || "") : "Sign in to sync your progress"; }
   $("#tabs").innerHTML = TABS.map(([k, l]) => `<button role="tab" data-view="${k}" aria-selected="${S.view === k}">${l}</button>`).join("");
   const v = S.view;
   $("#view").innerHTML = v === "course" ? renderCourse() : v === "goals" ? renderGoals() : v === "speak" ? renderSpeak() : v === "deck" ? renderDeck() : v === "coach" ? renderCoach() : v === "profile" ? renderProfile() : renderLessonTab();
@@ -1201,6 +1305,28 @@ document.addEventListener("click", async ev => {
   else if (act === "clear-dict") { S.speak.heard = ""; S.speak.result = null; render(); const d = $("#dict"); if (d) d.focus(); }
   else if (act === "do-check") runCheck(b.dataset.h, ($("#dict") || {}).value || "");
   else if (act === "mic") startMic(b.dataset.h);
+  else if (act === "google") {
+    const err = $("#acct-err"); if (err) err.textContent = "";
+    const prov = new firebase.auth.GoogleAuthProvider();
+    try { await FB.auth.signInWithPopup(prov); }
+    catch (e) {
+      if (/popup-blocked|operation-not-supported|web-storage-unsupported/.test(e.code || "")) { try { await FB.auth.signInWithRedirect(prov); } catch (e2) { if ($("#acct-err")) $("#acct-err").textContent = authError(e2); } }
+      else if ($("#acct-err")) $("#acct-err").textContent = authError(e);
+    }
+  }
+  else if (act === "forgot") {
+    const email = ($("#acct-email") || {}).value || "";
+    if (!email.trim()) { $("#acct-err").textContent = "Type your email address first, then tap Forgot password."; return; }
+    try { await FB.auth.sendPasswordResetEmail(email.trim()); $("#acct-err").textContent = ""; $("#acct-msg").textContent = "If there's an account for that email, a reset link is on its way. Check your inbox and spam folder."; }
+    catch (e) { $("#acct-err").textContent = authError(e); }
+  }
+  else if (act === "signout") { await FB.auth.signOut(); }
+  else if (act === "delete-acct") { S.confirmDelete = true; render(); }
+  else if (act === "delete-no") { S.confirmDelete = false; render(); }
+  else if (act === "delete-yes") {
+    try { await S.store.reset(); await FB.auth.currentUser.delete(); S.confirmDelete = false; setStatus("Your account and its data were deleted."); }
+    catch (e) { S.confirmDelete = false; render(); const el = $("#acct-err"); if (el) el.textContent = authError(e); }
+  }
   else if (act === "ai-remove") { AI.set("", null); render(); }
   else if (act === "ai-test") {
     const msg = $("#ai-msg"); if (msg) msg.textContent = "Testing…";
@@ -1262,6 +1388,16 @@ document.addEventListener("change", ev => {
 document.addEventListener("submit", async ev => {
   ev.preventDefault();
   const f = ev.target;
+  if (f.id === "account-form") {
+    const mode = (ev.submitter && ev.submitter.dataset.mode) || "signin";
+    const email = f.querySelector("#acct-email").value.trim(), pass = f.querySelector("#acct-pass").value;
+    const err = $("#acct-err"); err.textContent = "";
+    try {
+      if (mode === "create") await FB.auth.createUserWithEmailAndPassword(email, pass);
+      else await FB.auth.signInWithEmailAndPassword(email, pass);
+    } catch (e) { err.textContent = authError(e); }
+    return;
+  }
   if (f.id === "ai-form") {
     const k = f.querySelector("#ai-key").value.trim(), m = f.querySelector("#ai-model").value;
     if (k && !providerOf(k)) { $("#ai-msg").textContent = "That doesn't look like a Gemini key (starts AIza) or a Claude key (starts sk-ant-)."; return; }
@@ -1309,6 +1445,15 @@ render();
     setStatus("Couldn't reach your saved progress, so this browser's copy is in use.");
   }
   render();
+  if (FB.on) {
+    FB.auth.getRedirectResult().catch(e => { const m = authError(e); if (m) setStatus(m); });
+    FB.auth.onAuthStateChanged(async user => {
+      const was = FB.user; FB.user = user;
+      if (user) { if (S.view === "profile") S.view = "course"; await switchToCloud(user); }
+      else if (was) { await switchToLocal(); setStatus("Signed out. This browser shows only what was saved here before you signed in."); }
+      else render();
+    });
+  }
 })();
 </script>
 

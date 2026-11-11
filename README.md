@@ -23,4 +23,5 @@ Your key stays in your browser and is only sent to the provider it belongs to.
 - **Android (Chrome):** open the link, then ⋮ › **Add to Home screen** (or **Install app**).
 - **iPhone (Safari):** open the link, then Share › **Add to Home Screen**.
 
-Progress is saved on your device. Use **Profile › Download backup** to move it to another device.
+## Your account (optional)
+Sign in on the Profile tab with your email and a password, or with Google, and your profile and progress are saved to your own private account and synced on every device. Each account can only read its own data. Without signing in, everything stays in your browser on that device, and **Profile › Download backup** moves it to another device.
